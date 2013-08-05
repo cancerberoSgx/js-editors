@@ -18,12 +18,12 @@
  */
 
 
-var SUPERROOT=this; //needs to be outside the wrapper function
+//var SUPERROOT=this; //needs to be outside the wrapper function
 //(function(_, Backbone){
 	
-console.debug(this)
+//	console.log(SUPERROOT); 
 	var ns=null;
-	window.sgxjseditors = ns = {}; 
+	window.jseditors = ns = {}; 
 	
 	ns.editors = {}; 
 	ns.registerEditor=function(ed) {
@@ -65,7 +65,7 @@ console.debug(this)
 		 */
 	,	render: function(el){}
 	,	buildUniqueId: function() {
-			return 'sgxjseds_'+this.get('name')+'_'+_.unique(); 
+			return _.uniqueId('sgxjseds_'+this.name); 
 		}
 		/**
 		 * updates 'value' attribute value with current state of the GUI
@@ -82,8 +82,8 @@ console.debug(this)
 	 */
 	ns.StringEditor = ns.Editor.extend({
 		initialize: function(attributes, options) {
-		    Backbone.Model.prototype.set.apply(this, arguments);
-		  }
+			Backbone.Model.prototype.initialize.apply(this, arguments);
+		}
 	,	name: 'StringEditor'// getName: function(){return "StringEditor";}
 	,	canEdit: function(obj){return _.isString(obj); }
 	,	templInput: '<input type="text" id="<%= id %>" value="<%= value %>"></input>'
@@ -91,17 +91,18 @@ console.debug(this)
 	,	render: function(){		
 			var templ = null; 
 			if(this.get('isTextArea')) {
-				templ = _.template(this.get('templTextArea'));// TODO: field
+				templ = _.template(this.templTextArea);// TODO: field
 			}
 			else {
-				templ = _.template(this.get('templInput'));// TODO: field
+				templ = _.template(this.templInput);// TODO: field
 			}
 			var elid = this.buildUniqueId();
 			this.set('elid', elid);
-			var str = templ({
+			var ctx = {
 				id: elid
 			,	value: this.get('value')
-			}); 
+			}; 
+			var str = templ(ctx);
 			ns.util.setHtml(this.get('el'), str);
 		}
 	,	flush: function() {

@@ -4,36 +4,32 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
-    <title>sgxjseditors test1</title>
+    <title>jseditors test1</title>
     
-    <script type="text/javascript" language="javascript" 
-    	src="../lib/underscore-min.js"></script>
+    <script type="text/javascript"
+    	src="../lib/underscore.js"></script>
     	
-    <script type="text/javascript" language="javascript" 
-    	src="../lib/backbone-min.js"></script>
+    <script type="text/javascript"
+    	src="../lib/backbone.js"></script>
     	
-    <script type="text/javascript" language="javascript" 
-    	src="../sgxjseditors/sgxjseditors.js"></script>
+    <script type="text/javascript"
+    	src="../src/jseditors.js"></script>
     	
   </head>
 
   <body>
 
-    <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
-    
-    <noscript>
-      <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
-        Your web browser must have JavaScript enabled
-        in order for this application to display correctly.
-      </div>
-    </noscript>
-
-
-<script language="javascript" >
-var p1 = document.createElement('p');document.body.appendChild(p1); 
-var eds = sgxjseditors; 
-var ed1 = new eds.StringEditor({value: '"hello there"', el: p1}); 
-console.log(ed1.getColor()); 
+<p>lskjdf</p>
+<script>
+try {
+	var p1 = document.createElement('p');
+	document.body.appendChild(p1);
+	 
+	var ed1 = new jseditors.StringEditor({value: 'hello there', el: p1}); 
+	ed1.render();
+} catch(ex){
+	debugger; 
+} 
 </script>
   </body>
 </html>
