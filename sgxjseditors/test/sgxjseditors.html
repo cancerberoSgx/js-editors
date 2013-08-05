@@ -19,17 +19,18 @@
 
   <body>
 
-<p>lskjdf</p>
 <script>
-try {
-	var p1 = document.createElement('p');
-	document.body.appendChild(p1);
-	 
-	var ed1 = new jseditors.StringEditor({value: 'hello there', el: p1}); 
-	ed1.render();
-} catch(ex){
-	debugger; 
-} 
+var createEl = function(tag) {
+	var p1 = document.createElement(tag);
+	document.body.appendChild(p1);	
+	return p1; 
+}
+
+var ed1 = new jseditors.StringEditor({value: 'hello there', el: createEl()}); 
+ed1.render();
+
+var ed2 = new jseditors.StringEditor({value: 'hello world', isTextArea: true, el: createEl()}); 
+ed2.render();
 </script>
   </body>
 </html>
