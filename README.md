@@ -11,12 +11,12 @@ Compiling it
 =============
 Install nodejs on your system
 
-´´´
+```
 cd jseditors
 npm install grunt
 npm install grunt-contrib-uglify
 grunt
-´´´
+```
 If all goes fine, then files will be available under the dist/ folder. 
 
 Some Notes
