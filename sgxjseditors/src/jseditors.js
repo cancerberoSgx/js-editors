@@ -23,7 +23,7 @@
 	
 //	console.log(SUPERROOT); 
 	var ns=null;
-	window.jseditors = ns = {}; 
+	jseditors = ns = {}; 
 	
 	ns.editors = {}; 
 	ns.registerEditor=function(ed) {
