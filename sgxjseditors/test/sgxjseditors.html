@@ -8,19 +8,41 @@
     
     <script type="text/javascript" src="../lib/underscore.js"></script>
     	
-    <script type="text/javascript" src="../lib/backbone.js"></script>
+<!--     <script type="text/javascript" src="../lib/backbone.js"></script> -->
     	
 <!--     	<script type="text/javascript" src="../../build/js-editors-all.min.js"></script> -->
     	
     <script type="text/javascript" src="../src/jseditors.js"></script>    	
     <script type="text/javascript" src="../src/jseditors-html5.js"></script>
     
+<!--     jquery : not a dependency - used just for this test  -->
+   	<script type="text/javascript" src="jquery/jquery-2.0.3.min.js"></script> 
+    
   </head>
 
   <body>
 
 <script>
+
+/* provide dom utilities using jquery impl so the lib is not dependent on jquery directly */
+	
+_.extend(jseditors.util, {
+	setHtml: function(el, str) {
+		$(el).html(str); //native innerHTML can be used here without problems. 
+	}
+,	setValue: function(el, val) {
+		$(el).val(val); 
+	}
+// ,	getInnerText: function(el) {
+// 		return $(el).html();
+// 	}
+,	getValue: function(el) {
+		return $(el).val(); 
+	}
+}); 
+
 var createEl = function(tag) {
+	tag=tag||'b'; 
 	var p1 = document.createElement(tag);
 	document.body.appendChild(p1);	
 	return p1; 
@@ -31,6 +53,12 @@ ed1.render();
 
 var ed2 = new jseditors.StringEditor({value: 'hello world', isTextArea: true, el: createEl()}); 
 ed2.render();
+
+var button = createEl("button"); 
+$(button).text('Click me!'); 
+$(button).click(function(e){
+	alert("ed1: "+ed1.flush()+" - ed2: "+ed2.flush()); 
+}); 
 </script>
   </body>
 </html>

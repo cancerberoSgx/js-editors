@@ -35,8 +35,22 @@ ns.registerEditor=function(ed) {
 ns.util = {
 
 	/* utilities that may be needed to implement using some library like jquery */
-	setHtml: function(el, str) {
-		el.innerHTML=str;
+//	setHtml: function(el, str) {
+//		el.innerHTML=str;
+//	}
+//,	setValue: function(el, val) {
+//		el.setAttribute('value', val); 
+//	}
+//,	getInnerText: function(el) {
+//		return el.innerHTML;
+//	}
+//,	getValue: function(el) {
+//		return el.getAttribute('value'); 
+//	}
+
+
+	getById: function(elId) {
+		return document.getElementById(elId);
 	}
 
 	/* OOP related utilities based on underscore */
@@ -94,15 +108,13 @@ ns.editors = ns.util.defineClass(ns, "Editor", ns.util.noop,
 		 * visual implementation will be builded when this method is called, so
 		 * editors will have a chance of being configured before.
 		 */
-	,	render: function(el){}
+	,	render: function(el){}//default impl, subclass must override. 
 	
 		/**
 		 * updates 'value' attribute value with current state of the GUI
 		 * 
 		 * @return the updated value
 		 */
-	,	flush: function() {
-			return this.get('value'); 
-		}
+	,	flush: function() {return this.value;	}//default impl, subclass must override.
 	}
 ); 

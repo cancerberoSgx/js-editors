@@ -3,7 +3,7 @@ js-editors
 
 Editor framework focusing in automatic GUI / forms generation from JSON model Objects. 
 
-Requires underscorejs and backbonejs. Based on backbone models (all included).
+Dependencies: underscore js. 
 
 Distributed under the MIT license http://www.opensource.org/licenses/mit-license.php 
 
@@ -21,15 +21,16 @@ If all goes fine, then files will be available under the dist/ folder.
 
 Some Notes
 =============
-This is a very new / investigational project!
+This is a very new / investigation project!
 
-It defines an extendable / scalable abstract model, utilities and data types not existing in javascript
+It defines an extendible / scalable abstract model, utilities and data types not existing in javascript
  like colors, etc. 
 
 The first implementation will be pure HTML 5
 with no particular style or widgets and using html5 advanced inputs for data and color. 
 
  Use case example: 
+ 
 ```
  var obj = {name: 'Seba', age: 29}; 
  var ed = new editors.ObjectEditor({formType: 'inline', value: obj}); 
