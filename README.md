@@ -30,6 +30,7 @@ The first implementation will be pure HTML 5
 with no particular style or widgets and using html5 advanced inputs for data and color. 
 
  Use case example: 
+```
  var obj = {name: 'Seba', age: 29}; 
  var ed = new editors.ObjectEditor({formType: 'inline', value: obj}); 
  ed.render(containerEl); 
@@ -39,4 +40,4 @@ with no particular style or widgets and using html5 advanced inputs for data and
  	window.alert('Edited name='); 
  });   
  
- 
+```

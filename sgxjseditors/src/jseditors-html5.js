@@ -16,57 +16,46 @@
  * 	window.alert('Edited name='); 
  * }); 
  */
-
-
-//var SUPERROOT=this; //needs to be outside the wrapper function
-//(function(_, Backbone){
 	
-//	console.log(SUPERROOT); 
-	var ns=jseditors;
-//	if(!ns.impls)
-//		ns.impls={};
-//	
-//	var impl={}
-//	ns.impls['html5impl']=impl;
+var ns=jseditors;
+
+/**
+ * @class StringEditor 
+ * Attributes: 'isTextArea'
+ */
+ns.editors = ns.util.defineClass(ns, "StringEditor", ns.Editor, 
+	//constructor
 		
-	/**
-	 * Attributes: 'isTextArea'
-	 */
-	ns.StringEditor = ns.Editor.extend({
-		initialize: function(attributes, options) {
-			Backbone.Model.prototype.initialize.apply(this, arguments);
-		}
-	,	name: 'StringEditor'// getName: function(){return "StringEditor";}
+	function(attrs) {
+		this.__super.apply(this, arguments); //call super
+//		ns.Editor.apply(this, arguments); //call super
+	}
+
+	//dynamic properties
+,	{
+		name: 'StringEditor'
 	,	canEdit: function(obj){return _.isString(obj); }
-	,	templInput: '<input type="text" id="<%= id %>" value="<%= value %>"></input>'
-	,	templTextArea: '<textarea type="text" id="<%= id %>"><%= value %></textarea>'
 	,	render: function(){		
-			var templ = null; 
-			if(this.get('isTextArea')) {
-				templ = _.template(this.templTextArea);// TODO: field
-			}
-			else {
-				templ = _.template(this.templInput);// TODO: field
-			}
-			var elid = this.buildUniqueId();
-			this.set('elid', elid);
+			var templ = this.isTextArea ? ns.StringEditor.templTextArea : ns.StringEditor.templInput; 
+			var elid = ns.util.buildUniqueId();
+			this.elid=elid;
 			var ctx = {
 				id: elid
-			,	value: this.get('value')
+			,	value: this.value
 			}; 
 			var str = templ(ctx);
-			ns.util.setHtml(this.get('el'), str);
+			ns.util.setHtml(this.el, str);
 		}
 	,	flush: function() {
 			
 		}
-	}); 
-	
-	// inheritance using .extend
-	/*
-	 * ns.EditorDef = { init: function(){ this.color = "blue"; } , getColor:
-	 * function(){ return this.color; } };
-	 * 
-	 * ns.Editor = function(){ _.extend(this, ns.EditorDef); this.init(); };
-	 */
-// })(_, Backbone);
+	}
+
+	//static properties
+,	{
+		templInput: _.template('<input type="text" id="<%= id %>" value="<%= value %>"></input>')
+	,	templTextArea: _.template('<textarea type="text" id="<%= id %>"><%= value %></textarea>')
+	,	templReadOnly: _.template('<p id="<%= id %>"><%= value %></p>')
+	}
+); 
+
