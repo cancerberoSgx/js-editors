@@ -27,14 +27,27 @@
 var ns=null;
 jseditors = ns = {}; 
 
-ns.editors = {}; 
+ns.editors = {}; //main editor instance dict
 ns.registerEditor=function(ed) {
-// ed.get('name') && ns.editors[ed.get('name'), ed];
+	ns.editors[ed.name]=ed;
+}; 
+ns.getEditorsFor = function(value) {
+	var result = [];
+	for(var name in ns.editors) {
+		var ed = ns.editors[name]; 
+		if(ed.canEdit(value))
+			result.push(ed); 
+	}
 }; 
 
 ns.util = {
 
-	/* utilities that may be needed to implement using some library like jquery */
+	/* utilities that may be needed to implement using some library like jquery. 
+	 * Currently provided by the user - see test/*.html for jquery and other implementations. 
+	 * We want to separate dependencies here because 1) we dont want to force the user to some 
+	 * particular DOM library like jquery, 2) editor implementations may even not be html ones 
+	 * but other (think on node - desktop) 
+	 */
 //	setHtml: function(el, str) {
 //		el.innerHTML=str;
 //	}
@@ -47,14 +60,12 @@ ns.util = {
 //,	getValue: function(el) {
 //		return el.getAttribute('value'); 
 //	}
-
-
-	getById: function(elId) {
-		return document.getElementById(elId);
-	}
+//	getById: function(elId) {
+//		return document.getElementById(elId);
+//	}
 
 	/* OOP related utilities based on underscore */
-,	defineStaticField: function(obj, name, val, replace) {
+	defineStaticField: function(obj, name, val, replace) {
 		if(replace || !obj[name])
 			obj[name]=val;
 	}
@@ -63,6 +74,8 @@ ns.util = {
 	 * @return the new class constructor function. 
 	 */
 ,	defineClass: function(ns, className, parentClass, constructor, classBody, staticFields) {
+		parentClass = parentClass || ns.util.noop; 
+		constructor = constructor || parentClass; 
 		ns[className]=constructor; 
 		ns[className].prototype = _.clone(parentClass.prototype);
 		_.extend(ns[className].prototype, classBody); 
@@ -89,12 +102,12 @@ ns.util = {
  * 'value' : the value being edited by this editor. Normally it won't be a copy and the editor is able to modify it to reflect current editor state when you call flush
  * 'readonly': Default: false. If true the user won't be able to edit any value. For example a String editor will show a span HTML element instead input or textarea for presenting a string.
  */
-ns.editors = ns.util.defineClass(ns, "Editor", ns.util.noop, 
+ns.util.defineClass(ns, "Editor", null /*has no parent*/, 
 		
 	function(config) {
-		_.extend(this, config);
-//		this.config=config;
+		_.extend(this, config);//this.config=config;
 		ns.registerEditor(this); 
+		this.ns=ns;//reference to the workspace
 	}
 
 ,	{

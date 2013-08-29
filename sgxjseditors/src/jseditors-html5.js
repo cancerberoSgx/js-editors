@@ -18,17 +18,31 @@
  */
 	
 var ns=jseditors;
-ns.editors && (ns.editors={}); 
+//ns.editors && (ns.editors={}); 
 //ns.util.defineStaticField(ns, "editors", {}); 
 
 
-
+ns.util.defineClass(ns, "HTML5AbstractEditor", ns.Editor, 
+	//constructor
+	null 
+,	{
+		renderHTML: function(templ) {
+			var elid = ns.util.buildUniqueId();
+			this.elid=elid;
+			var str = templ(this);
+			ns.util.setHtml(this.el, str); 
+		}
+	}
+,	{
+		
+	}
+);
 
 /**
  * @class StringEditor 
  * Attributes: 'isTextArea'
  */
-ns.StringEditor = ns.util.defineClass(ns, "StringEditor", ns.Editor, 
+ns.util.defineClass(ns, "StringEditor", ns.Editor, 
 	//constructor		
 	function(attrs) {
 		this.__super.apply(this, arguments); //call super
@@ -38,16 +52,11 @@ ns.StringEditor = ns.util.defineClass(ns, "StringEditor", ns.Editor,
 		name: 'StringEditor'
 	,	canEdit: function(obj){return _.isString(obj); }
 	,	render: function(){		
+//			var elid = ns.util.buildUniqueId();
+//			this.elid=elid;
+//			this.__super.prototype.render.apply(this, arguments); //super()
 			var templ = this.isTextArea ? ns.StringEditor.templTextArea : ns.StringEditor.templInput; 
-			var elid = ns.util.buildUniqueId();
-			this.elid=elid;
-			var ctx = {
-				id: elid
-			,	value: this.value
-			}; 
-			var str = templ(ctx);
-			ns.util.setHtml(this.el, str);
-//			this.inputEl = ns.util.getById(elid); 
+			this.renderHTML(templ); 
 		}
 	,	getInputEl: function() {
 		 	return ns.util.getById(this.elid); 
@@ -63,9 +72,9 @@ ns.StringEditor = ns.util.defineClass(ns, "StringEditor", ns.Editor,
 	}
 	//static properties
 ,	{
-		templInput: _.template('<input type="text" id="<%= id %>" value="<%= value %>"></input>')
-	,	templTextArea: _.template('<textarea type="text" id="<%= id %>"><%= value %></textarea>')
-	,	templReadOnly: _.template('<p id="<%= id %>"><%= value %></p>')
+		templInput: _.template('<input type="text" id="<%= elid %>" value="<%= value %>"></input>')
+	,	templTextArea: _.template('<textarea type="text" id="<%= elid %>"><%= value %></textarea>')
+	,	templReadOnly: _.template('<p id="<%= elid %>"><%= value %></p>')
 	}
 ); 
 
@@ -82,7 +91,7 @@ ns.StringEditor = ns.util.defineClass(ns, "StringEditor", ns.Editor,
  * @class AbstractInputEditor 
  * Attributes: 'type' - one of 
  */
-ns.AbstractInputEditor = ns.util.defineClass(ns, "AbstractInputEditor", ns.Editor, 
+ns.util.defineClass(ns, "AbstractInputEditor", ns.Editor, 
 	//constructor		
 	function(attrs) {
 		this.__super.apply(this, arguments);
@@ -94,15 +103,51 @@ ns.AbstractInputEditor = ns.util.defineClass(ns, "AbstractInputEditor", ns.Edito
 	,	getInputEl: function() {
 		 	return ns.util.getById(this.elid); 
 		}
+	,	render: function(){	
+			this.renderHTML(ns.AbstractInputEditor.templInput); 
+//			var elid = ns.util.buildUniqueId();
+//			this.elid=elid;
+//			var str = ns.AbstractInputEditor.templInput(this);
+//			ns.util.setHtml(this.el, str);
+		}
+	,	flush: function() {
+			if(this.readonly) {
+				return this.value;
+			}		
+			else {
+				var val = ns.util.getValue(this.getInputEl()); //works both for input and textarea
+				return val; 
+			}
+		}
+	}
+	//static properties
+,	{
+		templInput: _.template('<input type="<%= type%>" id="<%= elid %>" value="<%= value %>"></input>')
+	}
+); 
+
+
+/**
+ * @class AbstractObjectEditor
+ * abstract utility class for implementing some kind of object editor. An object editor is an editor able to 
+ * edit a js object, optionally supporting recursiveness.
+ */
+ns.util.defineClass(ns, "AbstractObjectEditor", ns.Editor, 
+	//constructor		
+	function(attrs) {
+		this.__super.apply(this, arguments);
+	}
+	//dynamic properties
+,	{
+		name: 'AbstractObjectEditor'
+	,	canEdit: function(obj){return false; }//subclass must override
+	,	getInputEl: function() {
+		 	return ns.util.getById(this.elid); 
+		}
 	,	render: function(){			
 			var elid = ns.util.buildUniqueId();
 			this.elid=elid;
-			var ctx = {
-				id: elid
-			,	value: this.value
-			,	type: this.type || text
-			}; 
-			var str = ns.AbstractInputEditor.templInput(ctx);
+			var str = ns.AbstractInputEditor.templInput(this);
 			ns.util.setHtml(this.el, str);
 		}
 	,	flush: function() {
@@ -117,7 +162,7 @@ ns.AbstractInputEditor = ns.util.defineClass(ns, "AbstractInputEditor", ns.Edito
 	}
 	//static properties
 ,	{
-		templInput: _.template('<input type="<%= type%>" id="<%= id %>" value="<%= value %>"></input>')
+		templInput: _.template('<input type="<%= type%>" id="<%= elid %>" value="<%= value %>"></input>')
 	}
-); 
+);
 

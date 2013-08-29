@@ -39,6 +39,9 @@ _.extend(jseditors.util, {
 ,	getValue: function(el) {
 		return $(el).val(); 
 	}
+,	getById: function(elId) {
+		return document.getElementById(elId);
+	}
 }); 
 
 var createEl = function(tag) {
