@@ -75,15 +75,21 @@ _.extend(ns.util, {
 		el.innerHTML=str;  
 	}
 	/**
-	 * setValue: function(el, val). User must provide using jquery or other. See test.sgxjseditors.html. 
-	 * @method setValue
+	 * gets or sets the value of an input element. like jquery's val()
+	 * @method val
+	 * @static
 	 */
-,	setValue: ns.util.noop
-	/**
-	 * getValue: function(el). User must provide using jquery or other. See test.sgxjseditors.html. 
-	 * @method getValue
-	 */
-,	getValue: ns.util.noop
+,	val: function(el, val) {}
+//	/**
+//	 * setValue: function(el, val). User must provide using jquery or other. See test.sgxjseditors.html. 
+//	 * @method setValue
+//	 */
+//,	setValue: ns.util.noop
+//	/**
+//	 * getValue: function(el). User must provide using jquery or other. See test.sgxjseditors.html. 
+//	 * @method getValue
+//	 */
+//,	getValue: ns.util.noop
 	/**
 	 * getById: function(elId). User must provide using jquery or other. See test.sgxjseditors.html. 
 	 * @method getById
@@ -91,6 +97,12 @@ _.extend(ns.util, {
 ,	getById: function(elId) {
 		return document.getElementById(elId);
 	}
+	/**
+	 * get or sets an element's attribute. It basically works the sames as jquery's
+	 * @method attr
+	 * @static
+	 */
+,	attr: function(el, attrName, val) {}
 }); 
 
 

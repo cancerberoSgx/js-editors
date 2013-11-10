@@ -1,0 +1,15 @@
+<%
+ed.type=ed.type||'checkbox';
+console.log('ssss: '+ed.value);  
+if(ed.type==='checkbox') { 
+%>
+	<input type="checkbox" id="<%= ed.elid %>" 
+		<%= ed.getAdditionalAttrsHTML() %>
+		<%= ed.value ? 'checked' : ''%>
+		>
+		<%= ed.value %>
+	</input>
+	
+<% } else { /* is 2-item select list */%>
+	not suppoted yet		
+<% } %>

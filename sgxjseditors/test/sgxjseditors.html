@@ -30,17 +30,25 @@
 	
 	
 _.extend(jseditors.util, {
-	setHtml: function(el, str) {
-		$(el).html(str); //native innerHTML can be used here without problems. 
+// 	setHtml: function(el, str) {
+// 		$(el).html(str); //native innerHTML can be used here without problems. 
+// 	}
+	val: function(el, val) {
+		if(val) {
+			$(el).val(val)
+		}
+		else {
+			return $(el).val(); 
+		}		 
 	}
-,	setValue: function(el, val) {
-		$(el).val(val); 
-	}
-,	getValue: function(el) {
-		return $(el).val(); 
-	}
-,	getById: function(elId) {
-		return document.getElementById(elId);
+// ,	getValue: function(el) {
+// 		return $(el).val(); 
+// 	}
+// ,	getById: function(elId) {
+// 		return document.getElementById(elId);
+// 	}
+,	attr: function(el, attrName, val) {
+		return $(el).attr(attrName, val); 
 	}
 }); 
 
@@ -69,11 +77,18 @@ ed4.render();
 var ed5 = new jseditors.InputEditorNumber({value: '3.14', el: createEl()}); 
 ed5.render();
 
-var button = createEl("button"); 
-$(button).text('Click me!'); 
-$(button).click(function(e){
-	alert("ed1: "+ed1.flush()+" - ed2: "+ed2.flush()+" - ed3: "+ed3.flush()+" - ed4: "+ed4.flush()+
-			" - ed5: "+ed5.flush()+' isNumber: '+_.isNumber(ed5.flush())); 
+var ed6 = new jseditors.InputEditorBoolean({value: true, el: createEl()}); 
+ed6.render();
+
+$(createEl("button")).text('Click me!').click(function(e){
+	alert(
+		" - ed1: "+ed1.flush()+
+		" - ed2: "+ed2.flush()+
+		" - ed3: "+ed3.flush()+
+		" - ed4: "+ed4.flush()+
+		" - ed5: "+ed5.flush()+' isNumber: '+_.isNumber(ed5.flush())
+	); 
+	console.log(ed4.flush()); 
 });
 
 

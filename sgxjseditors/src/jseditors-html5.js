@@ -55,29 +55,52 @@ ns.util.defineClass(ns, "HTML5AbstractEditor", ns.Editor, null /*constructor*/
 		}
 		/** 
 		 * @method getAdditionAttrsHTML
-		 * @returns {String} with additional attribtues ready to use in html elements.  
-		 * @property additionalAttrs {Object} with additional html parameters for the input or textarea generated html element. 
+		 * @return {String} with additional attribtues ready to use in html elements. 
 		 */ 
-	,	getAdditionAttrsHTML: function() {
+		/**
+		 * additional html parameters for the input or textarea generated html element.
+		 * @property additionalAttrs 
+		 * @typer {Object} 
+		 */
+	,	getAdditionalAttrsHTML: function() {
 			this.additionalAttrs = this.additionalAttrs || {}; 
 			var additionalAttrsStr = '';
 			_.each(_.keys(this.additionalAttrs), function(attr){
-				additionalAttrsStr+=' '+additionalAttrsStr+'="'+this.additionalAttrs[attr]+'"'; 
+				if(attr!='innerHTML')
+					additionalAttrsStr+=' '+additionalAttrsStr+'="'+this.additionalAttrs[attr]+'"'; 
 			}); 
 			return additionalAttrsStr; 
 		}
+		/**
+		 * inner html to put inside the generated html element for this editor. 
+		 * @property innerHTML
+		 */
+		
 	}
 );
 
 
+
+
 /**
- * TODO loremmm
+ * A concrete class for editing simple String values using input or textarea html elements. 
+ * Supports readonly mode and configurable attributes and typecasting for easily extend new types. 
  * @class InputEditor 
  * @extends HTML5AbstractEditor
- * @property isTextArea
+ */
+/**
  * @property readonly {Boolean}
- * @property type {String} the html type attribute value. It only applies for input el.
- * @property tagName the tagname to use to show the value. It only applies for readonly==true
+ */
+/**
+ * @property isTextArea
+ */
+/** 
+ * Type attribute value for html input elements. It only applies for input el.
+ * @property type {String} 
+ */
+/**
+ * The tag name to use to show the value. It only applies for readonly==true
+ * @property tagName 
  */
 ns.util.defineClass(ns, "InputEditor", ns.HTML5AbstractEditor, null /*constructor*/		
 ,	{  /*instance fields*/
@@ -96,12 +119,13 @@ ns.util.defineClass(ns, "InputEditor", ns.HTML5AbstractEditor, null /*constructo
 				return this.parseValue(this.value);
 			}		
 			else {
-				return this.parseValue(ns.util.getValue(this.getInputEl())); //works both for input and textarea
+				return this.parseValue(ns.util.val(this.getInputEl())); //works both for input and textarea
 			}
 		}
-		/** 
-		 * @method parseValue. 
-		 * This editor can be extensible to return custom value type. By default it will work string. @see InputNumberEditor
+		/**
+		 * This editor can be extensible to return custom value type. By default it will work string. @see InputNumberEditor 
+		 * @method parseValue
+		 * @param val
 		 */
 	,	parseValue: function(val) {
 			return val; 
@@ -111,7 +135,10 @@ ns.util.defineClass(ns, "InputEditor", ns.HTML5AbstractEditor, null /*constructo
 
 
 
-/**extends InputEditor specially or editing numbers performing stuff like retuning
+
+
+/** 
+ *  Extends InputEditor specially or editing numbers performing stuff like retuning
  *  the casted number value on flush(), or showing type="number", in the generated markup.
  * @class InputEditorNumber 
  * @extends InputEditor
@@ -140,11 +167,43 @@ ns.util.defineClass(ns, "InputEditorNumber", ns.InputEditor
 ); 
 
 
+/** 
+ *  A boolean editor supporting the following types: 
+ *  1) checkbox
+ *  2) 2-item select list: true, false w configurable labels. 
+ * @class InputEditorBoolean
+ * @extends InputEditor
+ */
+ns.util.defineClass(ns, "InputEditorBoolean", ns.HTML5AbstractEditor, null /*constructor*/		
+,	{  /*instance fields*/
+		name: 'InputEditorBoolean'
+	,	canEdit: function(obj){
+			return _.isBoolean(obj); 
+		}
+	,	canEditType: function(type){
+			return type === ns.types.BOOLEAN;
+		}
+	,	render: function(){
+			if(this.readonly)
+				this
+			this.renderHTML(ns.templates.InputEditorBoolean); 
+		}
+	,	flush: function() {
+			if(this.readonly) {
+				return this.parseValue(this.value);
+			}		
+			else {
+				return this.parseValue(ns.util.val(this.getInputEl())); //works both for input and textarea
+			}
+		}
+	}
+); 
+
 
 
 
 /**
- * abstract utility class for implementing some kind of object editor. An object editor is an editor able to 
+ * Abstract utility class for implementing some kind of object editor. An object editor is an editor able to 
  * edit a js object, this is a list of named-values, optionally supporting 1) property order, 2) property grouping, 
  * 3) recursiveness (object editors inside object editors). 
  * 
@@ -173,7 +232,7 @@ ns.util.defineClass(ns, "AbstractObjectEditor", ns.HTML5AbstractEditor,
 				return this.value;
 			}		
 			else {
-				var val = ns.util.getValue(this.getInputEl()); //works both for input and textarea
+				var val = ns.util.val(this.getInputEl()); //works both for input and textarea
 				return val; 
 			}
 		}
