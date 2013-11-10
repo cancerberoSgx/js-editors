@@ -12,15 +12,18 @@
     	
 <!--     	<script type="text/javascript" src="../../build/js-editors-all.min.js"></script> -->    	
     <script type="text/javascript" src="../src/jseditors.js"></script>    	
-    <script type="text/javascript" src="../src/jseditors-html5.js"></script>
+    <script type="text/javascript" src="../src/jseditors-html5.js"></script>    
+    <script type="text/javascript" src="../src/html5-templates.js"></script>
     
 <!--     jquery : not a dependency - used just for this test  -->
    	<script type="text/javascript" src="jquery/jquery-2.0.3.min.js"></script> 
     
+	<style type="text/css">
+	h2{margin-top: 20px; border-bottom: 1px solid #ededed; }
+	</style>
   </head>
 
   <body>
-
 <script>
 
 /* provide dom utilities using jquery impl so the lib is not dependent on jquery directly */
@@ -41,26 +44,34 @@ _.extend(jseditors.util, {
 }); 
 
 var createEl = function(tag) {
-	tag=tag||'b'; 
+	tag=tag||'span'; 
 	var p1 = document.createElement(tag);
 	document.body.appendChild(p1);	
 	return p1; 
-}
+}; 
 
-var ed1 = new jseditors.StringEditor({value: 'hello there', el: createEl()}); 
+//InputEditor showcase: 
+createEl().innerHTML='<h2>InputEditor Showcase</h2>'
+var ed1 = new jseditors.InputEditor({value: 'hello there', el: createEl()}); 
 ed1.render();
 
-var ed2 = new jseditors.StringEditor({value: 'hello world', isTextArea: true, el: createEl()}); 
+var ed2 = new jseditors.InputEditor({value: 'hello world', isTextArea: true, el: createEl()}); 
 ed2.render();
 
-var ed3 = new jseditors.StringEditor({value: 'hello world ready only', readonly: true, el: createEl()}); 
+var ed3 = new jseditors.InputEditor({value: 'hello world ready only', tagname: 'span', readonly: true, el: createEl()}); 
 ed3.render();
+
+var ed4 = new jseditors.InputEditor({value: '123234345', type: 'number', el: createEl()}); 
+ed4.render();
 
 var button = createEl("button"); 
 $(button).text('Click me!'); 
 $(button).click(function(e){
-	alert("ed1: "+ed1.flush()+" - ed2: "+ed2.flush()); 
-}); 
+	alert("ed1: "+ed1.flush()+" - ed2: "+ed2.flush()+" - ed3: "+ed3.flush()+" - ed4: "+ed4.flush()); 
+});
+
+
+
 </script>
   </body>
 </html>

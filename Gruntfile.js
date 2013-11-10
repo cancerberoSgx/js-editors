@@ -7,7 +7,7 @@ module.exports = function(grunt) {
 
 				,
 				jshint : {
-					all : [ 'Gruntfile.js', 'sgxjseditors/src/jseditors.js' ]
+					all : [ 'sgxjseditors/src/jseditors.js', 'sgxjseditors/src/jseditors-html5.js' ]
 
 					,
 					options : {
@@ -19,6 +19,7 @@ module.exports = function(grunt) {
 				,
 				clean : [ 'build', 'sgxjseditors/src/html5-templates.js' ]
 
+				
 				,
 				uglify : {
 					options : {
@@ -30,14 +31,15 @@ module.exports = function(grunt) {
 						files : {
 							'build/<%= pkg.name %>-jseditors.min.js' : [ 'sgxjseditors/src/jseditors.js' ],
 							'build/<%= pkg.name %>-jseditors-html5.min.js' : [
-									'sgxjseditors/src/jseditors-html5.js',
-									'sgxjseditors/src/html5-templates.js' ]
+								'sgxjseditors/src/jseditors-html5.js',
+								'sgxjseditors/src/html5-templates.js' 
+							]
 
-							,
-							'build/<%= pkg.name %>-all.min.js' : [
-									'sgxjseditors/src/jseditors.js',
-									'sgxjseditors/src/jseditors-html5.js',
-									'sgxjseditors/src/html5-templates.js' ]
+						,	'build/<%= pkg.name %>-all.min.js' : [
+								'sgxjseditors/src/jseditors.js',
+								'sgxjseditors/src/jseditors-html5.js',
+								'sgxjseditors/src/html5-templates.js' 
+							]
 						}
 					}
 				}
@@ -60,15 +62,21 @@ module.exports = function(grunt) {
 					}
 				}
 
-			// https://github.com/gruntjs/grunt-contrib-connect
-			// , connect: {
-			// server: {
-			// options: {
-			// port: 8080,
-			// base: 'sgxeditors/test'
-			// }
-			// }
-			// }
+//			 https://github.com/gruntjs/grunt-contrib-connect
+			 , connect: {
+				 server: {
+					 options: {
+						 port: 8080,
+						 base: 'sgxjseditors'
+//						 keepalive: true
+					 }
+				 }
+			 }
+			 
+			 ,watch: {
+			    files: ['sgxjseditors/src/html5_templates/**/*.html'],
+			    tasks: ['jst'],
+			  },
 
 			});
 
@@ -78,10 +86,12 @@ module.exports = function(grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	// Default task(s).
 	grunt.registerTask('default', [ 'clean', 'jshint', 'jst', 'uglify' ]);
+	grunt.registerTask('run', [ 'connect', 'watch' ]);
 
-	// grunt.loadNpmTasks('grunt-contrib-connect');
+	 grunt.loadNpmTasks('grunt-contrib-connect');
 
 };

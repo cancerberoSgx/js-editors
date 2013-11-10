@@ -19,3 +19,20 @@ with no particular style or widgets and using html5 advanced inputs for data and
   ed.flush(); //the editor will modify its value and this is the same value referenced by 'obj', 'ed.get('value')'
  	window.alert('Edited name='); 
  });   
+ 
+ 
+ 
+ 
+ 
+ 
+ <% if(ed.readonly) { 
+	var tagName = ed.tagName || 'span'; 
+%>
+	<<%=tagName%> id="<%= ed.elid %>"><%= ed.value %></<%=tagName%>>
+	
+<% } else if(ed.isTextArea) { %>
+	<textarea id="<%= ed.elid %>"><%= ed.value %></textarea>
+		
+<% } else { %>
+	<input type="<%= ed.type || 'text' %>" id="<%= ed.elid %>" value="<%= ed.value %>"></input>
+<% } %>

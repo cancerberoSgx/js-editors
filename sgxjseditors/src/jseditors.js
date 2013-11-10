@@ -42,6 +42,9 @@ ns.getEditorsFor = function(value) {
 	return result; 
 }; 
 
+ns.types = {STRING: 'String', OBJECT: 'Object', NUMBER: 'Number', BOOLEAN: 'Boolean', ARRAY: 'Array'};
+ns.types.all = [ns.types.STRING, ns.types.OBJECT, ns.types.NUMBER, ns.types.BOOLEAN, ns.types.ARRAY]; 
+
 ns.util = {
 
 	/* utilities needed to implement using some library like jquery, underscore, etc. 
@@ -50,21 +53,6 @@ ns.util = {
 	 * particular DOM library like jquery, 2) editor implementations may even not be html ones 
 	 * but other (think on node - desktop) 
 	 */
-//	setHtml: function(el, str) {
-//		el.innerHTML=str;
-//	}
-//,	setValue: function(el, val) {
-//		el.setAttribute('value', val); 
-//	}
-//,	getInnerText: function(el) {
-//		return el.innerHTML;
-//	}
-//,	getValue: function(el) {
-//		return el.getAttribute('value'); 
-//	}
-//	getById: function(elId) {
-//		return document.getElementById(elId);
-//	}
 
 	/* OOP related utilities based on underscorejs */
 	defineStaticField: function(obj, name, val, replace) {
@@ -75,10 +63,11 @@ ns.util = {
 	 * defines a new class inside the given namespace ns. If no constructor is given, then a default constructor that calls __super will be made. 
 	 * @return the new class constructor function. 
 	 */
-,	defineClass: function(ns, className, parentClass, constructor, classBody, staticFields) {
+,	defineClass: function(ns, className, parentClass, constructor, instanceFields, classFields) {
 		parentClass = parentClass || ns.util.noop; 
+		classFields = classFields || {}; 
 		constructor = constructor || function() {
-			parentClass.apply(this, arguments); //this.__super && this.__super.apply(this, arguments); //call super
+			parentClass.apply(this, arguments); // super()
 		}; 
 		ns[className]=constructor; 
 		var newClass = ns[className]; 
@@ -86,20 +75,18 @@ ns.util = {
 		//extends the static/class properties
 		_.extend(newClass, parentClass);
 
-		//extends given static properties staticFields
-		_.extend(newClass, staticFields);
+		//extends given static properties classFields
+		_.extend(newClass, classFields);
 		
 		//extends the instance properties
 		_.extend(newClass.prototype, parentClass.prototype); 
 		
-		//extends given instance properties classBody
-		_.extend(newClass.prototype, classBody); 
+		//extends given instance properties instanceFields
+		_.extend(newClass.prototype, instanceFields);		
 		
-		
-		//create a super shortcut for calling super in constructor or methods. 
+		//create a super shortcut for easy accessing the super class for example when calling super in constructor.  
 		newClass.prototype.__super = parentClass;
-		if(staticFields) 
-			_.extend(newClass, staticFields);
+		
 		return newClass; 
 	}
 
@@ -126,29 +113,41 @@ ns.util.defineClass(ns, "Editor", null /*has no parent*/,
 		_.extend(this, config);//this.config=config;
 		ns.registerEditor(this); 
 		this.ns=ns;//reference to the workspace
+//		this.init && this.init();			
 	}
 
 ,	{
 		name: null
+//		/**
+//		 * @method init
+//		 */
+//	,	init: ns.util.noop; 
 		/**
+		 * @method canEdit
 		 * @return true if this editor can edit a type of the given object
 		 */
-	,	canEdit: function(obj){return false; }
+	,	canEdit: ns.util.noop //function(obj){return false; }
 		/**
+		 * @method canEditType
+		 * @return true if this editor can edit the given type
+		 */
+	,	canEditType: ns.util.noop //function(type){return false; }
+		/**
+		 * @method render
 		 * renders this editor instance inside given html element (append). the
 		 * visual implementation will be builded when this method is called, so
 		 * editors will have a chance of being configured before.
 		 */
-	,	render: function(el){}//default impl, subclass must override. 
+	,	render: ns.util.noop //function(el){}//default impl, subclass must override. 
 	
 		/**
+		 * @method flush
 		 * Updates 'value' attribute value with current state of the GUI. 
 		 * This method signature is flexible. For example one implementation can return 
 		 * the value synchronously and other implementation can choose to flush 
-		 * asynchronously for example returning a promise/deferred object
-		 * 
+		 * asynchronously for example returning a promise/deferred object		 * 
 		 * @return the updated value
 		 */
-	,	flush: function() {return this.value;	}//default impl, subclass must override.
+	,	flush: ns.util.noop //function() {return this.value;	}//default impl, subclass must override.
 	}
 ); 

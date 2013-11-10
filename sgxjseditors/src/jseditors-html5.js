@@ -19,101 +19,94 @@
 var ns=jseditors;
 
 /**
- * @class HTML5AbstractEditor - base class for this html5 implementation.  
- * Attributes: 'isTextArea', readonly
+ * @class HTML5AbstractEditor - base class for this html5 implementation.
+ * @extends Editor
  */
-ns.util.defineClass(ns, "HTML5AbstractEditor", ns.Editor, 
-	//constructor
-	null 
-,	{
+ns.util.defineClass(ns, "HTML5AbstractEditor", ns.Editor, null /*constructor*/
+,	{	//instance fields
 		/**
 		 * @method renderHTML
 		 * @property elid {String} he id of the generated html element for this editor.
 		 */
 		renderHTML: function(templ) {
-			var elid = ns.util.buildUniqueId();
-			this.elid=elid;
-			var str = templ(this);
-			ns.util.setHtml(this.el, str); 
+			this.elid = ns.util.buildUniqueId();
+			ns.util.setHtml(this.el, templ({ed: this})); 
+		}
+		/**
+		 * @method getInputEl
+		 */
+		,	getInputEl: function() {
+			return ns.util.getById(this.elid); 
 		}
 	}
 );
 
 
 /**
- * @class StringEditor 
- * Attributes: 'isTextArea', readonly
+ * @class InputEditor  * 
+ * @extends HTML5AbstractEditor
+ * @property isTextArea
+ * @property readonly
+ * @property type
  */
-ns.util.defineClass(ns, "StringEditor", ns.HTML5AbstractEditor, 
-	//constructor	
-	null
-	
-	//dynamic properties
-,	{ 
-		name: 'StringEditor'
+ns.util.defineClass(ns, "InputEditor", ns.HTML5AbstractEditor, null /*constructor*/		
+,	{  /*instance fields*/
+		name: 'InputEditor'
 	,	canEdit: function(obj){
 			return _.isString(obj); 
 		}
-	,	render: function(){
-			var templ = this.isTextArea ? ns.StringEditor.templTextArea : ns.StringEditor.templInput; 
-			templ = this.readonly ? ns.StringEditor.templReadOnly : templ; 
-			this.renderHTML(templ); 
+	,	canEditType: function(type){
+			return type === ns.types.NUMBER;
 		}
-	,	getInputEl: function() {
-			return ns.util.getById(this.elid); 
+	,	render: function(){
+			this.renderHTML(ns.templates.InputEditor); 
 		}
 	,	flush: function() {
 			if(this.readonly) {
-				return this.value;
+				return this.parseValue(this.value);
 			}		
 			else {
-				return ns.util.getValue(this.getInputEl()); //works both for input and textarea
+				return this.parseValue(ns.util.getValue(this.getInputEl())); //works both for input and textarea
 			}
 		}
-	}
-
-	//static properties
-,	{
-		templInput: _.template('<input type="text" id="<%= elid %>" value="<%= value %>"></input>')
-	,	templTextArea: _.template('<textarea type="text" id="<%= elid %>"><%= value %></textarea>')
-	,	templReadOnly: _.template('<p id="<%= elid %>"><%= value %></p>')
+		/** 
+		 * @method parseValue. 
+		 * This editor can be extensible to return custom value type. By default it will work string. @see InputNumberEditor
+		 */
+	,	parseValue: function(val) {
+			return val; 
+		}
 	}
 ); 
 
-
-
-
 ///**
-// * abstract editor for supporting all native html5 input types. 
-// * @class AbstractInputEditor 
-// * Attributes: 'type' - one of 
+// * @class InputEditorNumber
+// * @extends InputEditor
 // */
-//ns.util.defineClass(ns, "AbstractInputEditor", ns.HTML5AbstractEditor, 
-//	//constructor		
-//	null
-//	//dynamic properties
-//,	{
-//		name: 'AbstractInputEditor'
-//	,	canEdit: function(obj){return false; }//subclass must override
-//	,	getInputEl: function() {
-//			return ns.util.getById(this.elid); 
-//		}
-//	,	render: function(){	
-//			this.renderHTML(ns.AbstractInputEditor.templInput);
-//		}
-//	,	flush: function() {
-//			if(this.readonly) {
-//				return this.value;
-//			}		
-//			else {
-//				var val = ns.util.getValue(this.getInputEl()); //works both for input and textarea
-//				return val; 
-//			}
-//		}
+//ns.util.defineClass(ns, "InputEditor", ns.HTML5AbstractEditor
+//	/*constructor*/
+//,	function() {
+//		//first default options and then user overridings calling super. 
+//		this.type='number'; 
+//		this.isTextArea=false;
+//		this.__super.apply(this, arguments); // super()
 //	}
-//	//static properties
-//,	{
-//		templInput: _.template('<input type="<%= type%>" id="<%= elid %>" value="<%= value %>"></input>')
+//					
+//,	{  /*instance fields*/
+//		name: 'InputNumberEditor' 
+////	,	init: function(){
+////			this.isTextArea = false;
+////			this.type='number'
+////		}
+//	,	parseValue: function(val) {
+//			return parseFloat(val+""); 
+//		}
+//	,	canEdit: function(obj){
+//			return _.isNumber(obj); 
+//		}
+//	,	canEditType: function(type){
+//			return type === ns.types.STRING;
+//		}
 //	}
 //); 
 
@@ -151,47 +144,41 @@ ns.util.defineClass(ns, "AbstractObjectEditor", ns.HTML5AbstractEditor,
 			}
 		}
 	}
-	//static properties
-,	{
-		templ: _.template('<input type="<%= type%>" id="<%= elid %>" value="<%= value %>"></input>')
-	}
 );
 
-/**
- * @class ObjectEditorTable
- */
-ns.util.defineClass(ns, "ObjectEditorTable", ns.AbstractObjectEditor, 
-	//constructor	
-	null
-	//dynamic properties
-,	{
-		name: 'AbstractObjectEditor'
-	,	canEdit: function(obj){
-			return _.isObject(obj); 
-		}//subclass must override
-	,	getInputEl: function() {
-			return ns.util.getById(this.elid); 
-		}
-	,	render: function(){			
-			var elid = ns.util.buildUniqueId();
-			this.elid=elid;
-			var str = ns.AbstractInputEditor.templInput(this);
-			ns.util.setHtml(this.el, str);
-		}
-	,	flush: function() {
-			if(this.readonly) {
-				return this.value;
-			}		
-			else {
-				var val = ns.util.getValue(this.getInputEl()); //works both for input and textarea
-				return val; 
-			}
-		}
-	}
-	//static properties
-,	{
-		templ: _.template('<table></table>')
-		
-	}
-);
 
+
+
+///**
+//* abstract editor for supporting all native html5 input types. 
+//* @class AbstractInputEditor 
+//* Attributes: 'type' - one of 
+//*/
+//ns.util.defineClass(ns, "AbstractInputEditor", ns.HTML5AbstractEditor, 
+//	//constructor		
+//	null
+//	//dynamic properties
+//,	{
+//		name: 'AbstractInputEditor'
+//	,	canEdit: function(obj){return false; }//subclass must override
+//	,	getInputEl: function() {
+//			return ns.util.getById(this.elid); 
+//		}
+//	,	render: function(){	
+//			this.renderHTML(ns.AbstractInputEditor.templInput);
+//		}
+//	,	flush: function() {
+//			if(this.readonly) {
+//				return this.value;
+//			}		
+//			else {
+//				var val = ns.util.getValue(this.getInputEl()); //works both for input and textarea
+//				return val; 
+//			}
+//		}
+//	}
+//	//static properties
+//,	{
+//		templInput: _.template('<input type="<%= type%>" id="<%= elid %>" value="<%= value %>"></input>')
+//	}
+//); 

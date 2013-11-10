@@ -13,8 +13,7 @@ Install nodejs on your system
 
 ```
 cd jseditors
-npm install grunt
-npm install grunt-contrib-uglify
+npm install
 grunt
 ```
 If all goes fine, then files will be available under the dist/ folder. 
@@ -42,3 +41,9 @@ with no particular style or widgets and using html5 advanced inputs for data and
  });   
  
 ```
+
+
+Roadmap & ideas
+===============
+
+* be able of creating an object editor from a form element. 
