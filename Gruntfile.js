@@ -21,6 +21,16 @@ grunt.initConfig({
 			}
 		}
 	}
+
+//https://github.com/gruntjs/grunt-contrib-connect
+,	connect: { 
+	    server: {
+	      options: {
+	        port: 8080,
+	        base: 'sgxeditors/test'
+	      }
+	    }
+	  }
 });
 
 
@@ -29,5 +39,8 @@ grunt.loadNpmTasks('grunt-contrib-uglify');
 
 // Default task(s).
 grunt.registerTask('default', [ 'uglify' ]);
+
+
+grunt.loadNpmTasks('grunt-contrib-connect');
 
 };

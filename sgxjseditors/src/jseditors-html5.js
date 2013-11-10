@@ -18,9 +18,6 @@
  */
 	
 var ns=jseditors;
-//ns.editors && (ns.editors={}); 
-//ns.util.defineStaticField(ns, "editors", {}); 
-
 
 ns.util.defineClass(ns, "HTML5AbstractEditor", ns.Editor, 
 	//constructor
@@ -33,28 +30,24 @@ ns.util.defineClass(ns, "HTML5AbstractEditor", ns.Editor,
 			ns.util.setHtml(this.el, str); 
 		}
 	}
-,	{
-		
-	}
 );
+
 
 /**
  * @class StringEditor 
  * Attributes: 'isTextArea'
  */
-ns.util.defineClass(ns, "StringEditor", ns.Editor, 
-	//constructor		
-	function(attrs) {
-		this.__super.apply(this, arguments); //call super
-	}
+ns.util.defineClass(ns, "StringEditor", ns.HTML5AbstractEditor, 
+	//constructor	
+	null
+	
 	//dynamic properties
-,	{
+,	{ 
 		name: 'StringEditor'
-	,	canEdit: function(obj){return _.isString(obj); }
-	,	render: function(){		
-//			var elid = ns.util.buildUniqueId();
-//			this.elid=elid;
-//			this.__super.prototype.render.apply(this, arguments); //super()
+	,	canEdit: function(obj){
+			return _.isString(obj); 
+		}
+	,	render: function(){
 			var templ = this.isTextArea ? ns.StringEditor.templTextArea : ns.StringEditor.templInput; 
 			this.renderHTML(templ); 
 		}
@@ -66,10 +59,11 @@ ns.util.defineClass(ns, "StringEditor", ns.Editor,
 				return this.value;
 			}		
 			else {
-				return ns.util.getValue(this.getInputEl()); //words both for input and textarea
+				return ns.util.getValue(this.getInputEl()); //works both for input and textarea
 			}
 		}
 	}
+
 	//static properties
 ,	{
 		templInput: _.template('<input type="text" id="<%= elid %>" value="<%= value %>"></input>')
@@ -81,21 +75,14 @@ ns.util.defineClass(ns, "StringEditor", ns.Editor,
 
 
 
-
-
-
-
-
 /**
  * abstract editor for supporting all native html5 input types. 
  * @class AbstractInputEditor 
  * Attributes: 'type' - one of 
  */
-ns.util.defineClass(ns, "AbstractInputEditor", ns.Editor, 
+ns.util.defineClass(ns, "AbstractInputEditor", ns.HTML5AbstractEditor, 
 	//constructor		
-	function(attrs) {
-		this.__super.apply(this, arguments);
-	}
+	null
 	//dynamic properties
 ,	{
 		name: 'AbstractInputEditor'
@@ -104,11 +91,7 @@ ns.util.defineClass(ns, "AbstractInputEditor", ns.Editor,
 		 	return ns.util.getById(this.elid); 
 		}
 	,	render: function(){	
-			this.renderHTML(ns.AbstractInputEditor.templInput); 
-//			var elid = ns.util.buildUniqueId();
-//			this.elid=elid;
-//			var str = ns.AbstractInputEditor.templInput(this);
-//			ns.util.setHtml(this.el, str);
+			this.renderHTML(ns.AbstractInputEditor.templInput);
 		}
 	,	flush: function() {
 			if(this.readonly) {
@@ -132,15 +115,15 @@ ns.util.defineClass(ns, "AbstractInputEditor", ns.Editor,
  * abstract utility class for implementing some kind of object editor. An object editor is an editor able to 
  * edit a js object, optionally supporting recursiveness.
  */
-ns.util.defineClass(ns, "AbstractObjectEditor", ns.Editor, 
-	//constructor		
-	function(attrs) {
-		this.__super.apply(this, arguments);
-	}
+ns.util.defineClass(ns, "AbstractObjectEditor", ns.HTML5AbstractEditor, 
+	//constructor	
+	null
 	//dynamic properties
 ,	{
 		name: 'AbstractObjectEditor'
-	,	canEdit: function(obj){return false; }//subclass must override
+	,	canEdit: function(obj){
+			return _.isObject(obj); 
+		}//subclass must override
 	,	getInputEl: function() {
 		 	return ns.util.getById(this.elid); 
 		}

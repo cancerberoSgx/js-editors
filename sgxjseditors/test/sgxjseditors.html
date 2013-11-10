@@ -10,8 +10,7 @@
     	
 <!--     <script type="text/javascript" src="../lib/backbone.js"></script> -->
     	
-<!--     	<script type="text/javascript" src="../../build/js-editors-all.min.js"></script> -->
-    	
+<!--     	<script type="text/javascript" src="../../build/js-editors-all.min.js"></script> -->    	
     <script type="text/javascript" src="../src/jseditors.js"></script>    	
     <script type="text/javascript" src="../src/jseditors-html5.js"></script>
     
@@ -33,9 +32,6 @@ _.extend(jseditors.util, {
 ,	setValue: function(el, val) {
 		$(el).val(val); 
 	}
-// ,	getInnerText: function(el) {
-// 		return $(el).html();
-// 	}
 ,	getValue: function(el) {
 		return $(el).val(); 
 	}
@@ -52,6 +48,7 @@ var createEl = function(tag) {
 }
 
 var ed1 = new jseditors.StringEditor({value: 'hello there', el: createEl()}); 
+
 ed1.render();
 
 var ed2 = new jseditors.StringEditor({value: 'hello world', isTextArea: true, el: createEl()}); 

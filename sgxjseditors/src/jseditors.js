@@ -2,7 +2,7 @@
  * 
  * based on html5
  *  
- * Requires underscorejs and backbonejs (~20kb)
+ * Requires underscorejs 
  * 
  * This file contains an abstract model and utlities. Then in other files like jseditors-html5 will be the concrete implementations that will extend this.
  *  
@@ -38,11 +38,12 @@ ns.getEditorsFor = function(value) {
 		if(ed.canEdit(value))
 			result.push(ed); 
 	}
+	return result; 
 }; 
 
 ns.util = {
 
-	/* utilities that may be needed to implement using some library like jquery. 
+	/* utilities needed to implement using some library like jquery, underscore, etc. 
 	 * Currently provided by the user - see test/*.html for jquery and other implementations. 
 	 * We want to separate dependencies here because 1) we dont want to force the user to some 
 	 * particular DOM library like jquery, 2) editor implementations may even not be html ones 
@@ -64,25 +65,41 @@ ns.util = {
 //		return document.getElementById(elId);
 //	}
 
-	/* OOP related utilities based on underscore */
+	/* OOP related utilities based on underscorejs */
 	defineStaticField: function(obj, name, val, replace) {
 		if(replace || !obj[name])
 			obj[name]=val;
 	}
 	/**
-	 * defines a new class inside the given namespace ns. 
+	 * defines a new class inside the given namespace ns. If no constructor is given, then a default constructor that calls __super will be made. 
 	 * @return the new class constructor function. 
 	 */
 ,	defineClass: function(ns, className, parentClass, constructor, classBody, staticFields) {
 		parentClass = parentClass || ns.util.noop; 
-		constructor = constructor || parentClass; 
+		constructor = constructor || function() {
+			parentClass.apply(this, arguments); //this.__super && this.__super.apply(this, arguments); //call super
+		}; 
 		ns[className]=constructor; 
-		ns[className].prototype = _.clone(parentClass.prototype);
-		_.extend(ns[className].prototype, classBody); 
-		ns[className].prototype["__super"]=parentClass;
+		var newClass = ns[className]; 
+		
+		//extends the static/class properties
+		_.extend(newClass, parentClass);
+
+		//extends given static properties staticFields
+		_.extend(newClass, staticFields);
+		
+		//extends the instance properties
+		_.extend(newClass.prototype, parentClass.prototype)
+		
+		//extends given instance properties classBody
+		_.extend(newClass.prototype, classBody)
+		
+		
+		//create a super shortcut for calling super in constructor or methods. 
+		newClass.prototype["__super"]=parentClass;
 		if(staticFields) 
-			_.extend(ns[className], staticFields);
-		return ns[className]; 
+			_.extend(newClass, staticFields);
+		return newClass; 
 	}
 
 	/* misc */
@@ -124,7 +141,10 @@ ns.util.defineClass(ns, "Editor", null /*has no parent*/,
 	,	render: function(el){}//default impl, subclass must override. 
 	
 		/**
-		 * updates 'value' attribute value with current state of the GUI
+		 * Updates 'value' attribute value with current state of the GUI. 
+		 * This method signature is flexible. For example one implementation can return 
+		 * the value synchronously and other implementation can choose to flush 
+		 * asynchronously for example returning a promise/deferred object
 		 * 
 		 * @return the updated value
 		 */
