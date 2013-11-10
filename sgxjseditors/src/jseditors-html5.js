@@ -12,17 +12,24 @@
  * ed.render(containerEl); 
  * ...
  * $acceptButton1.click(function(e){
- *  ed.flush(); //the editor will modify its value and this is the same value referenced by 'obj', 'ed.get('value')'
- * 	window.alert('Edited name='); 
+ * ed.flush(); //the editor will modify its value and this is the same value referenced by 'obj', 'ed.get('value')'
+ * window.alert('Edited name='); 
  * }); 
  */
-	
 var ns=jseditors;
 
+/**
+ * @class HTML5AbstractEditor - base class for this html5 implementation.  
+ * Attributes: 'isTextArea', readonly
+ */
 ns.util.defineClass(ns, "HTML5AbstractEditor", ns.Editor, 
 	//constructor
 	null 
 ,	{
+		/**
+		 * @method renderHTML
+		 * @property elid {String} he id of the generated html element for this editor.
+		 */
 		renderHTML: function(templ) {
 			var elid = ns.util.buildUniqueId();
 			this.elid=elid;
@@ -35,7 +42,7 @@ ns.util.defineClass(ns, "HTML5AbstractEditor", ns.Editor,
 
 /**
  * @class StringEditor 
- * Attributes: 'isTextArea'
+ * Attributes: 'isTextArea', readonly
  */
 ns.util.defineClass(ns, "StringEditor", ns.HTML5AbstractEditor, 
 	//constructor	
@@ -49,10 +56,11 @@ ns.util.defineClass(ns, "StringEditor", ns.HTML5AbstractEditor,
 		}
 	,	render: function(){
 			var templ = this.isTextArea ? ns.StringEditor.templTextArea : ns.StringEditor.templInput; 
+			templ = this.readonly ? ns.StringEditor.templReadOnly : templ; 
 			this.renderHTML(templ); 
 		}
 	,	getInputEl: function() {
-		 	return ns.util.getById(this.elid); 
+			return ns.util.getById(this.elid); 
 		}
 	,	flush: function() {
 			if(this.readonly) {
@@ -75,39 +83,39 @@ ns.util.defineClass(ns, "StringEditor", ns.HTML5AbstractEditor,
 
 
 
-/**
- * abstract editor for supporting all native html5 input types. 
- * @class AbstractInputEditor 
- * Attributes: 'type' - one of 
- */
-ns.util.defineClass(ns, "AbstractInputEditor", ns.HTML5AbstractEditor, 
-	//constructor		
-	null
-	//dynamic properties
-,	{
-		name: 'AbstractInputEditor'
-	,	canEdit: function(obj){return false; }//subclass must override
-	,	getInputEl: function() {
-		 	return ns.util.getById(this.elid); 
-		}
-	,	render: function(){	
-			this.renderHTML(ns.AbstractInputEditor.templInput);
-		}
-	,	flush: function() {
-			if(this.readonly) {
-				return this.value;
-			}		
-			else {
-				var val = ns.util.getValue(this.getInputEl()); //works both for input and textarea
-				return val; 
-			}
-		}
-	}
-	//static properties
-,	{
-		templInput: _.template('<input type="<%= type%>" id="<%= elid %>" value="<%= value %>"></input>')
-	}
-); 
+///**
+// * abstract editor for supporting all native html5 input types. 
+// * @class AbstractInputEditor 
+// * Attributes: 'type' - one of 
+// */
+//ns.util.defineClass(ns, "AbstractInputEditor", ns.HTML5AbstractEditor, 
+//	//constructor		
+//	null
+//	//dynamic properties
+//,	{
+//		name: 'AbstractInputEditor'
+//	,	canEdit: function(obj){return false; }//subclass must override
+//	,	getInputEl: function() {
+//			return ns.util.getById(this.elid); 
+//		}
+//	,	render: function(){	
+//			this.renderHTML(ns.AbstractInputEditor.templInput);
+//		}
+//	,	flush: function() {
+//			if(this.readonly) {
+//				return this.value;
+//			}		
+//			else {
+//				var val = ns.util.getValue(this.getInputEl()); //works both for input and textarea
+//				return val; 
+//			}
+//		}
+//	}
+//	//static properties
+//,	{
+//		templInput: _.template('<input type="<%= type%>" id="<%= elid %>" value="<%= value %>"></input>')
+//	}
+//); 
 
 
 /**
@@ -125,7 +133,7 @@ ns.util.defineClass(ns, "AbstractObjectEditor", ns.HTML5AbstractEditor,
 			return _.isObject(obj); 
 		}//subclass must override
 	,	getInputEl: function() {
-		 	return ns.util.getById(this.elid); 
+			return ns.util.getById(this.elid); 
 		}
 	,	render: function(){			
 			var elid = ns.util.buildUniqueId();
@@ -145,7 +153,45 @@ ns.util.defineClass(ns, "AbstractObjectEditor", ns.HTML5AbstractEditor,
 	}
 	//static properties
 ,	{
-		templInput: _.template('<input type="<%= type%>" id="<%= elid %>" value="<%= value %>"></input>')
+		templ: _.template('<input type="<%= type%>" id="<%= elid %>" value="<%= value %>"></input>')
+	}
+);
+
+/**
+ * @class ObjectEditorTable
+ */
+ns.util.defineClass(ns, "ObjectEditorTable", ns.AbstractObjectEditor, 
+	//constructor	
+	null
+	//dynamic properties
+,	{
+		name: 'AbstractObjectEditor'
+	,	canEdit: function(obj){
+			return _.isObject(obj); 
+		}//subclass must override
+	,	getInputEl: function() {
+			return ns.util.getById(this.elid); 
+		}
+	,	render: function(){			
+			var elid = ns.util.buildUniqueId();
+			this.elid=elid;
+			var str = ns.AbstractInputEditor.templInput(this);
+			ns.util.setHtml(this.el, str);
+		}
+	,	flush: function() {
+			if(this.readonly) {
+				return this.value;
+			}		
+			else {
+				var val = ns.util.getValue(this.getInputEl()); //works both for input and textarea
+				return val; 
+			}
+		}
+	}
+	//static properties
+,	{
+		templ: _.template('<table></table>')
+		
 	}
 );
 

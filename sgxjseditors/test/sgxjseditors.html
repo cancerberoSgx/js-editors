@@ -48,11 +48,13 @@ var createEl = function(tag) {
 }
 
 var ed1 = new jseditors.StringEditor({value: 'hello there', el: createEl()}); 
-
 ed1.render();
 
 var ed2 = new jseditors.StringEditor({value: 'hello world', isTextArea: true, el: createEl()}); 
 ed2.render();
+
+var ed3 = new jseditors.StringEditor({value: 'hello world ready only', readonly: true, el: createEl()}); 
+ed3.render();
 
 var button = createEl("button"); 
 $(button).text('Click me!'); 

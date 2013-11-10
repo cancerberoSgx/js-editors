@@ -15,7 +15,7 @@
  * ...
  * $acceptButton1.click(function(e){
  *  ed.flush(); //the editor will modify its value and this is the same value referenced by 'obj', 'ed.get('value')'
- * 	window.alert('Edited name='); 
+ *  window.alert('Edited name='); 
  * }); 
  */
 
@@ -26,6 +26,7 @@
 //	console.log(SUPERROOT); 
 var ns=null;
 jseditors = ns = {}; 
+jseditors.templates={}; 
 
 ns.editors = {}; //main editor instance dict
 ns.registerEditor=function(ed) {
@@ -89,14 +90,14 @@ ns.util = {
 		_.extend(newClass, staticFields);
 		
 		//extends the instance properties
-		_.extend(newClass.prototype, parentClass.prototype)
+		_.extend(newClass.prototype, parentClass.prototype); 
 		
 		//extends given instance properties classBody
-		_.extend(newClass.prototype, classBody)
+		_.extend(newClass.prototype, classBody); 
 		
 		
 		//create a super shortcut for calling super in constructor or methods. 
-		newClass.prototype["__super"]=parentClass;
+		newClass.prototype.__super = parentClass;
 		if(staticFields) 
 			_.extend(newClass, staticFields);
 		return newClass; 
@@ -105,7 +106,7 @@ ns.util = {
 	/* misc */
 ,	noop: function(){}
 ,	buildUniqueId: function() {
-		return _.uniqueId('sgxjseds_'+this.name); 
+		return _.uniqueId('jseditors_'+this.name); 
 	}
 }; 
 	
