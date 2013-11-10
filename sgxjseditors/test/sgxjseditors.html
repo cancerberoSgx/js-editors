@@ -28,6 +28,7 @@
 
 /* provide dom utilities using jquery impl so the lib is not dependent on jquery directly */
 	
+	
 _.extend(jseditors.util, {
 	setHtml: function(el, str) {
 		$(el).html(str); //native innerHTML can be used here without problems. 
@@ -52,6 +53,7 @@ var createEl = function(tag) {
 
 //InputEditor showcase: 
 createEl().innerHTML='<h2>InputEditor Showcase</h2>'
+
 var ed1 = new jseditors.InputEditor({value: 'hello there', el: createEl()}); 
 ed1.render();
 
@@ -64,10 +66,14 @@ ed3.render();
 var ed4 = new jseditors.InputEditor({value: '123234345', type: 'number', el: createEl()}); 
 ed4.render();
 
+var ed5 = new jseditors.InputEditorNumber({value: '3.14', el: createEl()}); 
+ed5.render();
+
 var button = createEl("button"); 
 $(button).text('Click me!'); 
 $(button).click(function(e){
-	alert("ed1: "+ed1.flush()+" - ed2: "+ed2.flush()+" - ed3: "+ed3.flush()+" - ed4: "+ed4.flush()); 
+	alert("ed1: "+ed1.flush()+" - ed2: "+ed2.flush()+" - ed3: "+ed3.flush()+" - ed4: "+ed4.flush()+
+			" - ed5: "+ed5.flush()+' isNumber: '+_.isNumber(ed5.flush())); 
 });
 
 
