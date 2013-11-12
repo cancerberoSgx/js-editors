@@ -11,8 +11,7 @@
 <!--     <script type="text/javascript" src="../lib/backbone.js"></script> -->
     	
 <!--     	<script type="text/javascript" src="../../build/js-editors-all.min.js"></script> -->    	
-    <script type="text/javascript" src="../src/jseditors.js"></script>
-    <script type="text/javascript" src="../src/jseditors-types.js"></script>
+    <script type="text/javascript" src="../src/jseditors.js"></script>    	
     <script type="text/javascript" src="../src/jseditors-html5.js"></script>    
     <script type="text/javascript" src="../src/html5-templates.js"></script>
     
@@ -60,37 +59,26 @@ var createEl = function(tag) {
 	return p1; 
 }; 
 
-var ns = jseditors; 
 //InputEditor showcase: 
 createEl().innerHTML='<h2>InputEditor Showcase</h2>'
 
-var ed1 = new ns.InputEditor({value: 'hello there', el: createEl()}); 
+var ed1 = new jseditors.InputEditor({value: 'hello there', el: createEl()}); 
 ed1.render();
 
-var ed2 = new ns.InputEditor({value: 'hello world', isTextArea: true, el: createEl()}); 
+var ed2 = new jseditors.InputEditor({value: 'hello world', isTextArea: true, el: createEl()}); 
 ed2.render();
 
-var ed3 = new ns.InputEditor({value: 'hello world ready only', tagname: 'span', readonly: true, el: createEl()}); 
+var ed3 = new jseditors.InputEditor({value: 'hello world ready only', tagname: 'span', readonly: true, el: createEl()}); 
 ed3.render();
 
-var ed4 = new ns.InputEditor({value: '123234345', type: 'number', el: createEl()}); 
+var ed4 = new jseditors.InputEditor({value: '123234345', type: 'number', el: createEl()}); 
 ed4.render();
 
-var ed5 = new ns.InputEditorNumber({value: '3.14', el: createEl()}); 
+var ed5 = new jseditors.InputEditorNumber({value: '3.14', el: createEl()}); 
 ed5.render();
 
-//a boolean editor checkbox
-var ed6 = new ns.InputEditorBoolean({value: true, el: createEl()}); 
+var ed6 = new jseditors.InputEditorBoolean({value: true, el: createEl()}); 
 ed6.render();
-
-//a boolean editor 2-item selection list. 
-var ed7 = new jseditors.InputEditorBoolean({value: false, type: 'select', el: createEl()}); 
-ed7.render();
-
-//a color editor. Hey in this case we don't use the DOM but render the editor in a string. Then we manually add the string to the dom. Purpose of this is demonstrate that this is a text based rendering implementation
-// var ed8 = new jseditors.InputEditorBoolean({value: ''}); 
-// var ed8_str = ed8.renderHTML(); 
-// ed8.render();
 
 $(createEl("button")).text('Click me!').click(function(e){
 	alert(

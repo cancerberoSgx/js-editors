@@ -46,4 +46,5 @@ with no particular style or widgets and using html5 advanced inputs for data and
 Roadmap & ideas
 ===============
 
-* be able of creating an object editor from a form element. 
+* be able of creating an object editor from a form element.
+* be compatible with serverside nodejs/rhino for generating real markup. support pure string rendering.  

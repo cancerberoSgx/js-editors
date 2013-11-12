@@ -23,14 +23,31 @@
 //var SUPERROOT=this; //needs to be outside the wrapper function
 //(function(_, Backbone){
 
+
+
+/**
+ * @module jseditors-core
+ */
+
+
 (function(GLOBAL){
-	
-//	console.log(SUPERROOT); 
+	 
 var ns=null;
-GLOBAL.jseditors = ns = {}; 
+
+/**
+ * main global variable namespace for accessing this framework
+ * @class jseditors
+ * @static
+ */
+/**
+ * @property util 
+ * @type util
+ */
+GLOBAL.jseditors = GLOBAL.jseditors || {}; 
+ns = GLOBAL.jseditors;  
 ns.templates={}; 
 
-ns.editors = {}; //main editor instance dict
+ns.editors = {}; //editors mapping. 
 ns.registerEditor=function(ed) {
 	ns.editors[ed.name]=ed;
 }; 
@@ -44,18 +61,16 @@ ns.getEditorsFor = function(value) {
 	return result; 
 }; 
 
-ns.types = {STRING: 'String', OBJECT: 'Object', NUMBER: 'Number', BOOLEAN: 'Boolean', ARRAY: 'Array'};
-ns.types.all = [ns.types.STRING, ns.types.OBJECT, ns.types.NUMBER, ns.types.BOOLEAN, ns.types.ARRAY]; 
+//ns.tyPES = {STRING: 'STRING', OBJECT: 'OBJECT', NUMBER: 'NUMBER', BOOLEAN: 'BOOLEAN', ARRAY: 'ARRAY'};
+//NS.TYPEs.all = [ns.types.STRING, ns.types.OBJECT, ns.types.NUMBER, ns.types.BOOLEAN, ns.types.ARRAY]; 
 
 /**
- * @module jseditors-core
- */
-
-/**
- * @class ns.util
+ * @class util
+ * @static
  */
 ns.util = {
-	noop: function(){}
+	noop: function(){},
+	methodNotImplemented: function(){throw ' methodNotImplemented searchme_for_breakpoint'; }
 }; 
 
 
@@ -70,6 +85,7 @@ _.extend(ns.util, {
 	/**
 	 * setHtml: function(el, str). User must provide using jquery or other. See test.sgxjseditors.html. 
 	 * @method setHtml
+	 * @static
 	 */
 	setHtml: function(el, str) {
 		el.innerHTML=str;  
@@ -93,6 +109,7 @@ _.extend(ns.util, {
 	/**
 	 * getById: function(elId). User must provide using jquery or other. See test.sgxjseditors.html. 
 	 * @method getById
+	 * @static
 	 */
 ,	getById: function(elId) {
 		return document.getElementById(elId);
@@ -109,7 +126,8 @@ _.extend(ns.util, {
 
 
 /**
- * OOP related utilities based on underscorejs. Defines a new class inside the given namespace ns. If no constructor is given, then a default constructor that calls __super will be made.
+ * OOP related utilities based on underscorejs. Defines a new class inside the given namespace ns. 
+ * If no constructor is given, then a default constructor that calls super() will be made.
  * 
  * @method defineClass
  * @static  
@@ -119,10 +137,11 @@ _.extend(ns.util, {
  * @author sgurin
  */
 ns.util.defineClass = function(ns, className, parentClass, constructor, instanceFields, classFields) {
-	parentClass = parentClass || ns.util.noop; 
+	var noop = function(){}; 
+	parentClass = parentClass || noop; 
 	classFields = classFields || {}; 
 	constructor = constructor || function() {
-		parentClass.apply(this, arguments); // super()
+		(parentClass||noop).apply(this, arguments); // super()
 	}; 
 	ns[className]=constructor; 
 	var newClass = ns[className]; 
@@ -140,7 +159,7 @@ ns.util.defineClass = function(ns, className, parentClass, constructor, instance
 	_.extend(newClass.prototype, instanceFields);		
 	
 	//create a super shortcut for easy accessing the super class for example when calling super in constructor.  
-	newClass.prototype.__super = parentClass;
+//	newClass.prototype.__super = parentClass;
 	
 	return newClass; 
 }; 
@@ -155,6 +174,20 @@ ns.util.defineClass = function(ns, className, parentClass, constructor, instance
  * 'value' : the value being edited by this editor. Normally it won't be a copy and the editor is able to modify it to reflect current editor state when you call flush<br/>
  * 'readonly': Default: false. If true the user won't be able to edit any value. For example a String editor will show a span HTML element instead input or textarea for presenting a string.<br/>
  * @class Editor
+ * @constructor
+ */
+/**
+ * the name of this editor, must be unique across all the framework.
+ * @property name String 
+ */
+/**
+ * @property el HTMLElement the element into which to attach this editor when rendered.
+ */
+/**
+ * @property value Any the value being edited by this editor. Normally it won't be a copy and the editor is able to modify it to reflect current editor state when you call flush
+ */
+/**
+ * @property readonly Boolean Default: false. If true the user won't be able to edit any value. For example a String editor will show a span HTML element instead input or textarea for presenting a string.
  */
 ns.util.defineClass(ns, "Editor", null /*has no parent*/, 
 		

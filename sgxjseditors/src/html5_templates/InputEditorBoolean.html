@@ -1,15 +1,20 @@
 <%
 ed.type=ed.type||'checkbox';
-console.log('ssss: '+ed.value);  
-if(ed.type==='checkbox') { 
+if(ed.type==='checkbox') {
 %>
-	<input type="checkbox" id="<%= ed.elid %>" 
+	<input type="checkbox"  
 		<%= ed.getAdditionalAttrsHTML() %>
 		<%= ed.value ? 'checked' : ''%>
 		>
 		<%= ed.value %>
 	</input>
 	
-<% } else { /* is 2-item select list */%>
-	not suppoted yet		
+<% } else { /* is 2-item select list */
+var trueLabel = ed.trueLabel || 'true';
+var falseLabel = ed.falseLabel || 'false';  
+%>
+<select id="<%= ed.elid %>">
+	<option value="true"><%= trueLabel %></option>
+	<option value="false"><%= falseLabel %></option>
+</select>	
 <% } %>
