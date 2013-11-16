@@ -55,11 +55,19 @@
 		 * @param templ Function a html underscode template to render this editor.
 		 */
 	,	renderTemplate: function(templ) {
-			var templateContext = {
-				ed : this
-			}; 
-			var templateStr = templ(templateContext);			
+			var templateStr = templ(this.getDefaultTemplateContext());			
 			return this.renderHTML(templateStr); 
+		}
+		/**
+		 * subclasses can override for adding more properties 
+		 * @method getDefaultTempalteContext
+		 */
+	,	getDefaultTemplateContext: function() {
+			return {
+				ed : this,
+				ns: ns,
+				_: _
+			};
 		}
 		/**
 		 * @method getInputEl
@@ -78,7 +86,8 @@
 
 		/**
 		 * additional html parameters for the input or textarea generated html element.
-		 * html attributes added to this collection by the editor are id and class. User may override all of the other. In the case of class 
+		 * html attributes added to this collection by the editor are id and class. 
+		 * User may override all of the other. In the case of class 
 		 * user classes will be appended to editor's. User cannot override ids. 
 		 * 
 		 * @property additionalAttrs
@@ -96,175 +105,22 @@
 			var self = this; 
 			var additionalAttrsStr = ''; //TODO buffer
 			_.each(_.keys(this.additionalAttrs), function(attr) {
-				if (attr != 'innerHTML') {
-					additionalAttrsStr += ' ' + attr + '="' + self.additionalAttrs[attr] + '"';
-				}
+//				if (attr != 'innerHTML') {
+				additionalAttrsStr += ' ' + attr + '="' + self.additionalAttrs[attr] + '"';
+//				}
 			});
 			return additionalAttrsStr;
 		}
-	/**
-	 * inner html to put inside the generated html element for this editor.
-	 * 
-	 * @property innerHTML
-	 */
+
+//		/**
+//		 * inner html to put inside the generated html element for this editor.
+//		 * 
+//		 * @property innerHTML
+//		 */
 
 	});
 
 	
-	
-	
-	/**
-	 * A concrete class for editing simple String values using input or textarea
-	 * html elements. Supports readonly mode and configurable attributes and typecasting for easily extend new types.
-	 * 
-	 * @class InputEditor
-	 * @extends HTML5AbstractEditor
-	 */
-	/**
-	 * @property readonly {Boolean}
-	 */
-	/**
-	 * @property isTextArea
-	 */
-	/**
-	 * Type attribute value for html input elements. It only applies for input
-	 * el.
-	 * 
-	 * @property type {String}
-	 */
-	/**
-	 * The tag name to use to show the value. It only applies for readonly==true
-	 * 
-	 * @property tagName
-	 */
-	ns.util.defineClass(ns, "InputEditor", ns.HTML5AbstractEditor, null /* constructor */
-	, { /* instance fields */
-		name : 'InputEditor',
-		canEdit : function(obj) {
-			return _.isString(obj);
-		},
-		canEditType : function(type) {
-			return type === ns.types.NUMBER;
-		},
-		render : function() {
-			this.renderTemplate(ns.templates.InputEditor);
-		},
-		flush : function() {
-			if (this.readonly) {
-				return this.parseValue(this.value);
-			} else {
-				// works both for input and text area elements. 
-				return this.parseValue(ns.util.val(this.getInputEl())); 
-			}
-		}
-		/**
-		 * This editor can be extensible to return custom value type. By default
-		 * it will return with no casting
-		 * 
-		 * @see InputNumberEditor
-		 * @method parseValue
-		 * @param val
-		 */
-		,
-		parseValue : function(val) {
-			return val;
-		}
-	});
-
-	
-	
-	
-	/**
-	 * Extends InputEditor specially or editing numbers performing stuff like
-	 * retuning the casted number value on flush(), or showing type="number", in
-	 * the generated markup.
-	 * 
-	 * @class InputEditorNumber
-	 * @extends InputEditor
-	 */
-	ns.util.defineClass(ns, "InputEditorNumber", ns.InputEditor
-	/* constructor */
-	, function() {
-		// first default options and then user overriding calling super()
-		this.type = 'number';
-		this.isTextArea = false;
-		ns.InputEditor.apply(this, arguments);
-	}
-
-	, { /* instance fields */
-		name : 'InputNumberEditor',
-		parseValue : function(val) {
-			return parseFloat(val + "");
-		},
-		canEdit : function(obj) {
-			return _.isNumber(obj);
-		},
-		canEditType : function(type) {
-			return type === ns.types.NUMBER;
-		}
-	});
-	
-	
-	
-	/**
-	 * Extends InputEditor specially or editing numbers performing stuff like
-	 * retuning the casted number value on flush(), or showing type="number", in
-	 * the generated markup.
-	 * 
-	 * @class InputEditorNumber
-	 * @extends InputEditor
-	 */
-	ns.util.defineClass(ns, "InputColorEditor", ns.InputEditor
-	/* constructor */
-	, function() {
-		// first default options and then user overriding calling super()
-		this.type = 'color';
-		this.isTextArea = false;
-		ns.InputEditor.apply(this, arguments);
-	}
-
-	, { /* instance fields */
-		name : 'InputColorEditor',
-		parseValue : function(val) {
-			return parseFloat(val + "");
-		},
-		canEdit : function(obj) {
-			return _.isNumber(obj);
-		},
-		canEditType : function(type) {
-			return type === ns.types.NUMBER;
-		}
-	});
-	
-
-	/**
-	 * A boolean editor supporting the following types: 1) checkbox 2) 2-item
-	 * select list: true, false w configurable labels.
-	 * 
-	 * @class InputEditorBoolean
-	 * @extends InputEditor
-	 */
-	ns.util.defineClass(ns, "InputEditorBoolean", ns.HTML5AbstractEditor, null /* constructor */
-	, { /* instance fields */
-		name : 'InputEditorBoolean',
-		canEdit : function(obj) {
-			return _.isBoolean(obj);
-		},
-		canEditType : function(type) {
-			return type === ns.types.BOOLEAN;
-		},
-		render : function() {
-			this.renderTemplate(ns.templates.InputEditorBoolean);
-		},
-		flush : function() {
-			if (this.readonly) {
-				return this.parseValue(this.value);
-			} else {
-				// works both for input and text area elements.
-				return this.parseValue(ns.util.val(this.getInputEl())); 
-			}
-		}
-	});
 
 	/**
 	 * Abstract utility class for implementing some kind of object editor. An
@@ -272,7 +128,35 @@
 	 * named-values, optionally supporting 1) property order, 2) property
 	 * grouping, 3) recursiveness (object editors inside object editors).
 	 * 
+	 * This abstract object editor implementation support the concept of 
+	 * prefixTemplate, propertyTemplate and postfixTemplate so it is easy to 
+	 * build different subclases concrete subclasses table, forms, list, for presenting the properties names. 
+	 * Concrete subclasses must provide a prefixTemplate (optional), propertyTemplate (required), postFixTemplate (optional). 
+	 * 
+	 * 
 	 * @class AbstractObjectEditor
+	 */
+	/**
+	 * array of strings indicating the order of property by name. Properties not referenced in this array will be 
+	 * rendered at the bottom on any arbitrary order
+	 * @property propertyOrder
+	 * @type Array
+	 */
+	/**
+	 * @property prefixTemplate
+	 * @type Function
+	 */
+	/**
+	 * @property postfixTemplate
+	 * @type Function
+	 */
+	/**
+	 * template for each property. As context it will receive the following names: 
+	 * 'ed', 'propertyName', 'propertyValue', 'propertyEditor'
+	 * where the most interesting one is 'propertyEditor' that is an Editor instance ready to use
+	 * for editing the property value. propertyTempalteis responsible of rendering this editor in the right place.  
+	 * @property propertyTemplate
+	 * @type Function
 	 */
 	ns.util.defineClass(ns, "AbstractObjectEditor", ns.HTML5AbstractEditor,
 	// constructor
@@ -283,14 +167,19 @@
 		canEdit : function(obj) {
 			return _.isObject(obj);
 		},
+		/**
+		 * @override
+		 */
+		getDefaultTemplateContext: function(){},
 		canEditType : function(type) {
 			return type === ns.types.OBJECT;
 		},
 		render : function() {
-			var elid = ns.util.buildUniqueId();
-			this.elid = elid;
-			var str = ns.AbstractInputEditor.templInput(this);
-			ns.util.setHtml(this.el, str);
+			var html = '';
+			if(this.prefixTemplate) {
+				this.prefixTemplate(); 
+			}
+			return this.renderHTML(html);
 		},
 		flush : function() {
 			if (this.readonly) {
@@ -301,5 +190,32 @@
 			}
 		}
 	});
+	
+	/**
+	 * prove of concept implementation of AbstractObjectEditor
+	 * @class ObjectEditorTable
+	 */
+	ns.util.defineClass(ns, "ObjectEditorTable", ns.AbstractObjectEditor,
+		// constructor
+		null
+		// dynamic properties
+		, {
+			name : 'ObjectEditorTable',
+			render : function() {
+				var html = '';
+				
+				return this.renderHTML(html);
+			},
+			flush : function() {
+				if (this.readonly) {
+					return this.value;
+				} else {
+					// works both for input and text area elements.
+					var val = ns.util.val(this.getInputEl()); 
+				}
+			}
+		}
+	);
+	
 
 })(jseditors);

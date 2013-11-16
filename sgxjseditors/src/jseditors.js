@@ -45,9 +45,21 @@ var ns=null;
  */
 GLOBAL.jseditors = GLOBAL.jseditors || {}; 
 ns = GLOBAL.jseditors;  
+/**
+ * @property templates
+ * @type Object
+ */
 ns.templates={}; 
-
-ns.editors = {}; //editors mapping. 
+/**
+ * editors mapping by name
+ * @property editors
+ * @type Object
+ */
+ns.editors = {}; 
+/**
+ * @method registerEditor
+ * @param ed {Editor}
+ */
 ns.registerEditor=function(ed) {
 	ns.editors[ed.name]=ed;
 }; 
@@ -167,27 +179,32 @@ ns.util.defineClass = function(ns, className, parentClass, constructor, instance
 
 
 /**
- * Main Abstract Editor class.  
- * Attributes:<br/> 
- * 'name' : the name of this editor, must be unique across all the framework. <br/>
- * 'el' : the element into which to attach this editor when rendered. <br/>
- * 'value' : the value being edited by this editor. Normally it won't be a copy and the editor is able to modify it to reflect current editor state when you call flush<br/>
- * 'readonly': Default: false. If true the user won't be able to edit any value. For example a String editor will show a span HTML element instead input or textarea for presenting a string.<br/>
+ * Main Abstract Editor class. An editor is an object that knows how to 
+ * 1) represent the state of some object or value in a UI (load()) 
+ * 2) let the user edit interactively the value and get back this edited value (flush())
+ * 3) 
  * @class Editor
  * @constructor
  */
 /**
  * the name of this editor, must be unique across all the framework.
- * @property name String 
+ * @property name 
+ * @type String 
  */
 /**
- * @property el HTMLElement the element into which to attach this editor when rendered.
+ * the element into which to attach this editor when rendered.
+ * @property el  
+ * @type HTMLElement
  */
 /**
- * @property value Any the value being edited by this editor. Normally it won't be a copy and the editor is able to modify it to reflect current editor state when you call flush
+ * The value being edited by this editor. Normally it won't be a copy and the editor is able to modify it to reflect current editor state when you call flush
+ * @property value 
+ * @type Any
  */
 /**
- * @property readonly Boolean Default: false. If true the user won't be able to edit any value. For example a String editor will show a span HTML element instead input or textarea for presenting a string.
+ * Default: false. If true the user won't be able to edit any value. For example a String editor will show a span HTML element instead input or textarea for presenting a string.
+ * @property readonly 
+ * @type boolean 
  */
 ns.util.defineClass(ns, "Editor", null /*has no parent*/, 
 		
@@ -218,16 +235,21 @@ ns.util.defineClass(ns, "Editor", null /*has no parent*/,
 	,	render: ns.util.noop  
 	
 		/**
-		 * Updates 'value' attribute value with current state of the GUI. 
+		 * it 'flushes' the current GUI state returning this value and updating the 'value' property
+		 *  
 		 * This method signature is flexible. For example one implementation can return 
 		 * the value synchronously and other implementation can choose to flush 
-		 * asynchronously for example returning a promise/deferred object	
+		 * asynchronously for example returning a promise/deferred object. 
+		 * 
 		 * @method flush	 
 		 * @return the updated value
 		 */
 	,	flush: ns.util.noop 
 	
-
+		/**
+		 * returns a unique id for html els
+		 * @method buildUniqueId
+		 */
 	,	buildUniqueId: function() {
 			return _.uniqueId('jseditors_'+this.name); 
 		}

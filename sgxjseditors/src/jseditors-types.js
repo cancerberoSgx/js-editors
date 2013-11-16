@@ -18,10 +18,13 @@
 	 * @class types.Type
 	 */
 	/**
-	 * @property name String
+	 * @property name 
+	 * @type String
 	 */
 	/**
+	 * true if passed parameter is a valid instance for this type. 
 	 * @method objectIs 
+	 * @param obj
 	 * @return Boolean
 	 */
 	ns.types = {
@@ -55,12 +58,25 @@
 			}
 	);
 	/**
+	 * a SelectionList represents a value consisting on a selected subset (this.selection) of a total list (all). 
+	 * Items can be of any type. 
 	 * @class type.SelectionList
 	 */
-	ns.util.defineClass(ns.type, "Color", null /*has no parent*/, null/*constructor */
-			,	{/*instance fields */
-					r: 0, g: 0, b: 0
-				}
+	/**
+	 * @property all
+	 * @type Array of Any
+	 */
+	/**
+	 * @property selection
+	 * @type Array of Any
+	 */
+	ns.util.defineClass(ns.type, "SelectionList", null /*has no parent*/, 
+		function(all, selection) { // constructor
+			this.all=all;
+			this.selection=selection; 
+		}
+	,	{/*instance fields */			
+		}
 		);
 
 

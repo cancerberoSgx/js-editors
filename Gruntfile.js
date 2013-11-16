@@ -2,9 +2,17 @@ module.exports = function(grunt) {
 
 	//variables about source files: 
 	
-	var jsSrcFiles = [ 'sgxjseditors/src/jseditors.js',
+	var jsSrcFiles = [ //don't include template generated files in here.
+	                   
+	        'sgxjseditors/src/jseditors.js',
 			'sgxjseditors/src/jseditors-types.js',
-			'sgxjseditors/src/jseditors-html5.js' ];
+			'sgxjseditors/src/jseditors-event.js',
+			
+			'sgxjseditors/src/jseditors-html5.js',
+			'sgxjseditors/src/jseditors-html5-input.js'
+			];
+	
+	var dependencies = ['sgxjseditors/lib/underscore-min.js']; 
 	
 	var templatesJsOutput = 'sgxjseditors/src/html5-templates.js'; 
 	
@@ -114,7 +122,6 @@ module.exports = function(grunt) {
 				tasks : [ 'jst' ]
 			}
 		
-//		this is nice for writing apidocs but only for that.....
 		,			
 			apidoc : {
 				files : jsSrcFiles,
@@ -132,8 +139,23 @@ module.exports = function(grunt) {
 		// options: {
 		// livereload: true
 		// }
+			},
+
+		jasmine : {
+			customTemplate : {
+//				vendor : dependencies,
+				src : jsSrcFiles,// 'sgxjseditors/src/**/*.js',
+				options : {
+					vendor : dependencies,
+					specs : 'sgxjseditors/spec/*spec.js'
+				// files: jsSrcFiles
+				// helpers: 'spec/*Helper.js',
+				// template: 'custom.tmpl'
+				}
+			}
 		}
-			
+		
+		
 			
 			 // grunt-express will serve the files from the folders listed in
 				// bases on specified port and `hostname`
@@ -175,8 +197,9 @@ module.exports = function(grunt) {
 	
 	grunt.registerTask('default', [ 'clean', 'jshint', 'jst', 'uglify' ]);
 	grunt.registerTask('run', [ 'connect', 'watch' ]);
-	grunt.registerTask('apidoc', [ 'clean', 'yuidoc' ]);	
+	grunt.registerTask('apidoc', [ 'clean', 'yuidoc' ]);
 	
+	grunt.registerTask('test', [ 'jasmine' ]);
 	
 //	grunt.registerTask('server', ['express', 'open', 'watch']);
 //	"matchdep": "~0.1.2",
