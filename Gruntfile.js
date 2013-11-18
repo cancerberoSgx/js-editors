@@ -5,11 +5,14 @@ module.exports = function(grunt) {
 	var jsSrcFiles = [ //don't include template generated files in here.
 	                   
 	        'sgxjseditors/src/jseditors.js',
+	        'sgxjseditors/src/jseditors-util.js',
+	        'sgxjseditors/src/jseditors-base.js',	        
 			'sgxjseditors/src/jseditors-types.js',
 			'sgxjseditors/src/jseditors-event.js',
 			
 			'sgxjseditors/src/jseditors-html5.js',
-			'sgxjseditors/src/jseditors-html5-input.js'
+			'sgxjseditors/src/jseditors-html5-input.js',
+			'sgxjseditors/src/jseditors-html5-object.js'
 			];
 	
 	var dependencies = ['sgxjseditors/lib/underscore-min.js']; 
@@ -49,21 +52,16 @@ module.exports = function(grunt) {
 			main_target : {
 				files : {
 					
-					'build/<%= pkg.name %>-jseditors.min.js' : [ 
-                        'sgxjseditors/src/jseditors.js',
-                        'sgxjseditors/src/jseditors-types.js',
-                     ],
-					
-					'build/<%= pkg.name %>-jseditors-html5.min.js' : [
-							'sgxjseditors/src/jseditors-html5.js',
-							'sgxjseditors/src/html5-templates.js' ]
-			
-					,
-					'build/<%= pkg.name %>-all.min.js' : [
-							'sgxjseditors/src/jseditors.js',
-							'sgxjseditors/src/jseditors-types.js',
-							'sgxjseditors/src/jseditors-html5.js',
-							'sgxjseditors/src/html5-templates.js' ]
+//					'build/<%= pkg.name %>-jseditors.min.js' : [ 
+//                        'sgxjseditors/src/jseditors.js',
+//                        'sgxjseditors/src/jseditors-types.js',
+//                     ],
+//					
+//					'build/<%= pkg.name %>-jseditors-html5.min.js' : [
+//							'sgxjseditors/src/jseditors-html5.js',
+//							'sgxjseditors/src/html5-templates.js' ]			
+//					,
+					'build/<%= pkg.name %>-all.min.js' : jsSrcFiles
 				}
 			}
 		}
@@ -147,7 +145,8 @@ module.exports = function(grunt) {
 				src : jsSrcFiles,// 'sgxjseditors/src/**/*.js',
 				options : {
 					vendor : dependencies,
-					specs : 'sgxjseditors/spec/*spec.js'
+					specs : 'sgxjseditors/spec/*spec.js',
+					keepRunner: true
 				// files: jsSrcFiles
 				// helpers: 'spec/*Helper.js',
 				// template: 'custom.tmpl'

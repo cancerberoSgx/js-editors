@@ -1,6 +1,5 @@
 <% 
-/* proof of concept of a Object editor using table. */
-var editorContainerId = _.uniqueId('ObjectEditorTableProperty'); 
-propertyEditor.render()
+var html = propertyEditor.render(); 
+console.log(html); 
 %>
-<tr><td><%= propName %></td><td id="<%= editorContainerId%>"></td></tr>
+<tr><td><%= propertyName %></td><%= html %><td></td></tr>

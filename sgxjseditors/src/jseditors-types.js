@@ -46,6 +46,7 @@
 	/**
 	 * namespace for concrete abstract data types like color, selectionlist, etc.
 	 * @class jseditors.type
+	 * @static
 	 */
 	//
 	ns.type = {}; 

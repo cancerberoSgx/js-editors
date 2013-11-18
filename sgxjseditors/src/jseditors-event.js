@@ -17,20 +17,24 @@
 			 * @method addListener
 			 */
 			addListener: function(eventName, handler) {
-				if( ! this.listeners.eventName)
-					this.listeners.eventName = []; 
-				this.listeners.eventName.push(handler); //TODO: check for existence and do nothing.
+				if( ! this.listeners[eventName])
+					this.listeners[eventName] = []; 
+				this.listeners[eventName].push(handler); //TODO: check for existence and do nothing.
 			}
-		,	removeListener: ns.util.methodNotImplemented //TODO	
+		,	removeListener: function(eventName, listener) {
+				if(this.listeners[eventName]) {
+					this.listeners[eventName] = _.without(this.listeners[eventName], listener); 
+				}
+			}
 			/**
 			 * @method trigger
 			 * @param event {Event} Event
 			 */ 
 		,	trigger: function(event) {
-				if( ! this.listeners.eventName)
-					this.listeners.eventName = []; 
-				for ( var i = 0; i < this.listeners.eventName.length; i++) {
-					this.listeners.eventName[i].apply(this, [event]);
+				if( ! this.listeners[event.name])
+					this.listeners[event.name] = []; 
+				for ( var i = 0; i < this.listeners[event.name].length; i++) {
+					this.listeners[event.name][i].apply(this, [event]);
 				}				
 			}
 		}

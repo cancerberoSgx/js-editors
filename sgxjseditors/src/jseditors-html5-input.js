@@ -35,7 +35,8 @@
 			return type === ns.types.NUMBER;
 		},
 		render : function() {
-			this.renderTemplate(ns.templates.InputEditor);
+			return this.renderTemplate(ns.templates.InputEditor);
+			
 		},
 		flush : function() {
 			if (this.readonly) {
