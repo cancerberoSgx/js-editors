@@ -49,14 +49,7 @@
 		 * @param {String} the resulting html code. 
 		 */
 		renderHTML : function(html) {
-			/**
-			 * the id of the generated html element for this editor.
-			 * 
-			 * @property elid {String}
-			 */
-			if(!this.elid) {
-				this.elid = this.buildUniqueId();
-			}
+			
 			if(this.el) {
 				ns.util.setHtml(this.el, html);
 			}
@@ -68,6 +61,14 @@
 		 * @param {String} the resulting html code. 
 		 */
 	,	renderTemplate: function(templ) {
+			/**
+			 * the id of the generated html element for this editor.
+			 * 
+			 * @property elid {String}
+			 */
+			if(!this.elid) {
+				this.elid = this.buildUniqueId();
+			}
 			var templateStr = templ(this.getDefaultTemplateContext());			
 			return this.renderHTML(templateStr); 
 		}

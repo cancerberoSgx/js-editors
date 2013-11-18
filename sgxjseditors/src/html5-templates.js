@@ -87,9 +87,9 @@ console.log(html);
 ;
 __p += '\n<tr><td>' +
 ((__t = ( propertyName )) == null ? '' : __t) +
-'</td>' +
+'</td><td>' +
 ((__t = ( html )) == null ? '' : __t) +
-'<td></td></tr>';
+'</td></tr>';
 
 }
 return __p
