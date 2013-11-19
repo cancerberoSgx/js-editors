@@ -89,7 +89,7 @@
 			return _.isNumber(obj);
 		},
 		canEditType : function(type) {
-			return type === ns.types.NUMBER;
+			return type === ns.types.NUMBER.name;
 		}
 	});
 	
@@ -103,7 +103,7 @@
 	 * @class InputEditorNumber
 	 * @extends InputEditor
 	 */
-	ns.util.defineClass(ns, "InputColorEditor", ns.InputEditor
+	ns.util.defineClass(ns, "InputEditorColor", ns.InputEditor
 	/* constructor */
 	, function() {
 		// first default options and then user overriding calling super()
@@ -114,14 +114,14 @@
 
   , { /* instance fields */
 		name : 'InputColorEditor',
-		parseValue : function(val) {
-			return parseFloat(val + "");
-		},
+//		parseValue : function(val) {
+//			return parseFloat(val + "");
+//		},
 		canEdit : function(obj) {
-			return _.isNumber(obj);
+			return obj instanceof ns.type.Color; 
 		},
 		canEditType : function(type) {
-			return type === ns.types.NUMBER;
+			return type === ns.types.COLOR.name;
 		}
 	});
 	
@@ -140,7 +140,7 @@
 			return _.isBoolean(obj);
 		},
 		canEditType : function(type) {
-			return type === ns.types.BOOLEAN;
+			return type === ns.types.BOOLEAN.name;
 		},
 		render : function() {
 			return this.renderTemplate(ns.templates.InputEditorBoolean);

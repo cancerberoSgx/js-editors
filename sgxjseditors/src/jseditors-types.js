@@ -38,7 +38,8 @@
 		DATETIME: {name: 'DateTime', objectIs: ns.util.methodNotImplemented},
 		TIME: {name: 'Time', objectIs: ns.util.methodNotImplemented},
 		
-		COLOR: {name: 'Color', objectIs: ns.util.methodNotImplemented}
+		COLOR: {name: 'Color', objectIs: ns.util.methodNotImplemented},
+		SELECTLIST: {name: 'Color', objectIs: ns.util.methodNotImplemented}
 	};
 	//ns.types.all = [ns.types.STRING, ns.types.OBJECT, ns.types.NUMBER, ns.types.BOOLEAN, ns.types.ARRAY, ns.types.COLOR]; 
 	
@@ -48,16 +49,27 @@
 	 * @class jseditors.type
 	 * @static
 	 */
-	//
 	ns.type = {}; 
+	
+	
+	
 	/**
 	 * @class type.Color
 	 */
-	ns.util.defineClass(ns.type, "Color", null /*has no parent*/, null/*constructor */
-		,	{/*instance fields */
-				r: 0, g: 0, b: 0
-			}
+	ns.util.defineClass(ns.type, "Color", null /*has no parent*/, 
+		function(r, g, b){ //constructor
+			this.r=r; 
+			this.g=g; 
+			this.b=b; 
+		}
+	,	{/*instance fields */		
+			toHex: function(){}//TODO
+		,	toCSS: function(){}//TODO
+		}
 	);
+	
+	
+	
 	/**
 	 * a SelectionList represents a value consisting on a selected subset (this.selection) of a total list (all). 
 	 * Items can be of any type. 
@@ -71,14 +83,14 @@
 	 * @property selection
 	 * @type Array of Any
 	 */
-	ns.util.defineClass(ns.type, "SelectionList", null /*has no parent*/, 
+	ns.util.defineClass(ns.type, "SelectList", null /*has no parent*/, 
 		function(all, selection) { // constructor
 			this.all=all;
 			this.selection=selection; 
 		}
 	,	{/*instance fields */			
 		}
-		);
+	);
 
 
 })(jseditors);

@@ -83,7 +83,25 @@ with (obj) {
 
  
 var html = propertyEditor.render(); 
-console.log(html); 
+;
+__p += '\n<tr><td>' +
+((__t = ( propertyName )) == null ? '' : __t) +
+'</td><td>' +
+((__t = ( html )) == null ? '' : __t) +
+'</td></tr>';
+
+}
+return __p
+};
+
+this["jseditors"]["templates"]["SelectEditor1"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ 
+var html = propertyEditor.render(); 
 ;
 __p += '\n<tr><td>' +
 ((__t = ( propertyName )) == null ? '' : __t) +

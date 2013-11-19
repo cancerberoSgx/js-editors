@@ -172,8 +172,10 @@
 	
 	
 	
+	//now some implementations of object editor
+	
 	/**
-	 * prove of concept implementation of AbstractObjectEditor
+	 * prove of concept implementation of AbstractObjectEditor using an html table
 	 * @class ObjectEditorTable
 	 */
 	ns.util.defineClass(ns, "ObjectEditorTable", ns.AbstractObjectEditor, 
@@ -188,4 +190,11 @@
 	);
 	
 
+	
+	//idea para el abstract object editor
+	//suponer escenario q viene un json con tipos representados arbitrariament, por ej un color como un [1,2,3], u objetos en formatos extraños,
+	//en este caso queremos poder configurar los object editors para q puedan obtener el valor a editar 
+	//por ej un ns.type.Color) a partir de un objeto javascript arbitrario [1,2,3].
+	
+	
 })(jseditors);

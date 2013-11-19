@@ -126,4 +126,10 @@ ns.util.logerror = function(msg, e){
 	console.error(msg, e); 
 }; 
 
+//ns.util.instanceOf = function(instance, classConstructor){
+//	return instance instanceof classConstructor; 
+//}; 
+
+
+
 })(jseditors);
