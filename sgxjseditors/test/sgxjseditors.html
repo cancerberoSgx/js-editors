@@ -21,7 +21,8 @@
 <!--     html 5 implementation  --> 
     <script type="text/javascript" src="../src/jseditors-html5.js"></script>
     <script type="text/javascript" src="../src/jseditors-html5-input.js"></script>     
-    <script type="text/javascript" src="../src/jseditors-html5-object.js"></script>  
+    <script type="text/javascript" src="../src/jseditors-html5-object.js"></script>
+    <script type="text/javascript" src="../src/jseditors-html5-select.js"></script>    
         
     
 <!--     html5 implementation markup templates     -->
@@ -110,6 +111,17 @@ ns.registerEditor(ns.ObjectEditorTable);
 //a very simple object editor
 var ed8 = new ns.ObjectEditorTable({value: {prop1: 'hello', prop2: true}, el: createEl()}); 
 ed8.render();
+
+//a select list editor (using table)
+var ed9 = new ns.SelectListEditor({
+	value: new ns.type.SelectList(['Mozart', 'Beethoven', 'Bach'], ['Bach']), 
+	el: createEl()}); 
+// ed9.additional
+ed9.render();
+
+//another object editor (using list)
+var ed10 = new ns.ObjectEditorList({value: {prop1: 'hello2', prop2: false, color1: new ns.type.Color(12,23,34)}, el: createEl()}); 
+ed10.render();
 
 // a color editor. Hey in this case we don't use the DOM but render the editor in a string. Then we manually add the string to the dom. Purpose of this is demonstrate that this is a text based rendering implementation
 // var ed8 = new jseditors.InputEditorBoolean({value: ''}); 

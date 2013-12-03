@@ -12,18 +12,24 @@
 			return obj instanceof ns.type.SelectList; 
 		},
 		canEditType : function(type) {
-			return type === ns.types.BOOLEAN.name;
+			return type === ns.types.SELECTLIST.name;
 		},
 		render : function() {
-			return this.renderTemplate(ns.templates.InputEditorBoolean);
+			return this.renderTemplate(ns.templates.SelectEditor1);
 		},
-		flush : function() {
-			if (this.readonly) {
-				return this.parseValue(this.value);
-			} else {
-				// works both for input and text area elements.
-				return this.parseValue(ns.util.val(this.getInputEl())); 
-			}
+		flush : function() { //TODO: jquery used directly
+			var all = [], selection = []; 
+			jQuery(this.el).find('select>option').each(function(){
+				var opt = jQuery(this);
+				all.push(opt.text()); 
+				if(opt.is('selected'))
+					selection.push(opt.text);
+			}); 
+			if(!this.value)
+				this.value = new ns.types.SelectList(all,selection);
+			this.value.all=all;
+			this.value.selection=selection; 
+			return this.value; 
 		}
 	});
 

@@ -1,1 +1,6 @@
-<select></select>
+<select multiple="multiple">
+<% _(ed.value.all).each( function(item){
+var selected = _(ed.value.selection).contains(item); %>
+<option <%= selected ? 'selected="selected""' : '' %> ><%= item %></option>
+<% }); %>
+</select> 

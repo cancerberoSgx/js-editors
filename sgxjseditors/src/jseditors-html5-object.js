@@ -49,12 +49,9 @@
 	 * @property properties
 	 * @type Object name -> AbstractObjectEditorPropertyConfig
 	 */
-	ns.util.defineClass(ns, "AbstractObjectEditor", ns.HTML5AbstractEditor,
-	// constructor
-	null
-	// dynamic properties
-	, {
-//		name : 'AbstractObjectEditor',
+	ns.util.defineClass(ns, "AbstractObjectEditor", ns.HTML5AbstractEditor,	/* constructor */null
+	, {	// dynamic properties
+//		name : 'AbstractObjectEditor', //must be defined by subclass
 		/**
 		 * map of property editors by property name. 
 		 * @private
@@ -138,11 +135,9 @@
 			}			
 			if(this.postfixTemplate) {
 				sb.push(this.postfixTemplate(context));
-			}			
-//			sb.push('<p>examplecontent</p>');
+			}
 			var html = sb.join(''); 
 			return this.renderHTML(html); 
-//			return this.renderHTML();
 		},
 		flush : function() {
 			if (this.readonly) {
@@ -175,7 +170,7 @@
 	//now some implementations of object editor
 	
 	/**
-	 * prove of concept implementation of AbstractObjectEditor using an html table
+	 * sample implementation of AbstractObjectEditor using an html table
 	 * @class ObjectEditorTable
 	 */
 	ns.util.defineClass(ns, "ObjectEditorTable", ns.AbstractObjectEditor, 
@@ -188,7 +183,24 @@
 		name : 'ObjectEditorTable'	
 	}
 	);
-	
+	/**
+	 * sample implementation of AbstractObjectEditor using an html ul/ol and li
+	 * @class ObjectEditorTable
+	 */
+	ns.util.defineClass(ns, "ObjectEditorList", ns.AbstractObjectEditor, 
+	function(){ //constructor
+		ns.AbstractObjectEditor.apply(this, arguments); 
+		this.propertyTemplate=ns.templates.ObjectEditorListProperty;
+		/**
+		 * @property tagName - the html tag to use, ul or ol
+		 */
+		this.tagName='ul'; 
+		this.prefixTemplate = function(){return '<' + this.tagName + '>'; }; 
+		this.postfixTemplate = function(){return '</' + this.tagName + '>'; }; 
+	}, {//fields
+		name : 'ObjectEditorList'
+	}
+	);
 
 	
 	//idea para el abstract object editor

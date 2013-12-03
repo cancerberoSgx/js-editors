@@ -58,9 +58,9 @@
 	 */
 	ns.util.defineClass(ns.type, "Color", null /*has no parent*/, 
 		function(r, g, b){ //constructor
-			this.r=r; 
-			this.g=g; 
-			this.b=b; 
+			this.red=r; 
+			this.green=g; 
+			this.blue=b; 
 		}
 	,	{/*instance fields */		
 			toHex: function(){}//TODO

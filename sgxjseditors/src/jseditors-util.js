@@ -120,7 +120,7 @@ ns.util.extend = function(dest, src, except){
 		}
 	}
 	return dest; 
-}
+}; 
 
 ns.util.logerror = function(msg, e){
 	console.error(msg, e); 

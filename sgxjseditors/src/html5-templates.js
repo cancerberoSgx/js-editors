@@ -54,9 +54,7 @@ __p += '\n\t<input type="checkbox"  \n\t\t' +
 ((__t = ( ed.getAdditionalAttrsHTML() )) == null ? '' : __t) +
 '\n\t\t' +
 ((__t = ( ed.value ? 'checked' : '')) == null ? '' : __t) +
-'\n\t\t>\n\t\t' +
-((__t = ( ed.value )) == null ? '' : __t) +
-'\n\t</input>\n\t\n';
+'\n\t\t>\n\t</input>\n\t\n';
  } else { /* is 2-item select list */
 var trueLabel = ed.trueLabel || 'true';
 var falseLabel = ed.falseLabel || 'false';  
@@ -70,6 +68,25 @@ __p += '\n<select id="' +
 '</option>\n</select>\t\n';
  } ;
 __p += '\n';
+
+}
+return __p
+};
+
+this["jseditors"]["templates"]["ObjectEditorListProperty"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ 
+var html = propertyEditor.render(); 
+;
+__p += '\n<li><span class="object-property-name">' +
+((__t = ( propertyName )) == null ? '' : __t) +
+'</span><span class="object-property-value">' +
+((__t = ( html )) == null ? '' : __t) +
+'</span></li>';
 
 }
 return __p
@@ -99,15 +116,16 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-
- 
-var html = propertyEditor.render(); 
-;
-__p += '\n<tr><td>' +
-((__t = ( propertyName )) == null ? '' : __t) +
-'</td><td>' +
-((__t = ( html )) == null ? '' : __t) +
-'</td></tr>';
+__p += '<select multiple="multiple">\n';
+ _(ed.value.all).each( function(item){
+var selected = _(ed.value.selection).contains(item); ;
+__p += '\n<option ' +
+((__t = ( selected ? 'selected="selected""' : '' )) == null ? '' : __t) +
+' >' +
+((__t = ( item )) == null ? '' : __t) +
+'</option>\n';
+ }); ;
+__p += '\n</select> ';
 
 }
 return __p

@@ -90,7 +90,28 @@
 		getInputEl : function() {
 			return ns.util.getById(this.elid);
 		}
-		
+		,
+		/**
+		 * if true the value will be shown in a non-editable-by-the-user form. Subclases can override  getReadOnlyValue for 
+		 * @property readonly
+		 * @type boolean
+		 */
+
+		/**
+		 * prints a value in readonly form - by default will cal toString() method if exist or cast to string. 
+		 * Overridable by subclasses. 
+		 * @method getInputEl
+		 * @param val 
+		 */
+		getReadOnlyValue: function(val) {
+			if(val.toString) {
+				return val.toString(); 
+			}
+			else{
+				this.disabled = true;
+			}
+			return (val && val.toString) ? val.toString() : (val+''); 
+		}
 		/**
 		 * additional html parameters for the input or textarea generated html element.
 		 * html attributes added to this collection by the editor are id and class. 
@@ -99,7 +120,7 @@
 		 * 
 		 * @property additionalAttrs
 		 * @typer {Object}
-		 */
+		 */		
 		/**
 		 * @method getAdditionAttrsHTML
 		 * @return {String} with additional attribtues ready to use in html elements.

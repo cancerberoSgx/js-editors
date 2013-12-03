@@ -12,10 +12,14 @@ module.exports = function(grunt) {
 			
 			'sgxjseditors/src/jseditors-html5.js',
 			'sgxjseditors/src/jseditors-html5-input.js',
-			'sgxjseditors/src/jseditors-html5-object.js'
+			'sgxjseditors/src/jseditors-html5-object.js',
+			'sgxjseditors/src/jseditors-html5-select.js'
+			
 			];
 	
-	var dependencies = ['sgxjseditors/lib/underscore-min.js']; 
+	var dependencies = ['sgxjseditors/lib/underscore-min.js', 
+	                    'sgxjseditors/test/jquery/jquery-2.0.3.min.js'
+	                    ]; 
 	
 	var templatesJsOutput = 'sgxjseditors/src/html5-templates.js'; 
 	
@@ -141,15 +145,11 @@ module.exports = function(grunt) {
 
 		jasmine : {
 			customTemplate : {
-//				vendor : dependencies,
-				src : jsSrcFiles,// 'sgxjseditors/src/**/*.js',
+				src : jsSrcFiles.concat(templatesJsOutput),
 				options : {
 					vendor : dependencies,
 					specs : 'sgxjseditors/spec/*spec.js',
 					keepRunner: true
-				// files: jsSrcFiles
-				// helpers: 'spec/*Helper.js',
-				// template: 'custom.tmpl'
 				}
 			}
 		}
