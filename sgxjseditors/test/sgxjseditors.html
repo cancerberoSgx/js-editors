@@ -35,6 +35,7 @@
     
 	<style type="text/css">
 	h2{margin-top: 20px; border-bottom: 1px solid #ededed; }
+	h3{font-weight: normal; font-size: 14px;}
 	</style>
   </head>
 
@@ -67,16 +68,18 @@ _.extend(jseditors.util, {
 	}
 }); 
 
-var createEl = function(tag) {
+var createEl = function(tag, html) {
 	tag=tag||'span'; 
+	html=html||''; 
 	var p1 = document.createElement(tag);
+	p1.innerHTML=html;
 	document.body.appendChild(p1);	
 	return p1; 
 }; 
 
 var ns = jseditors; 
 //InputEditor showcase: 
-createEl().innerHTML='<h2>InputEditor Showcase</h2>'
+createEl().innerHTML='<h2>InputEditor Showcase</h2>'; 
 
 var ed1 = new ns.InputEditor({value: 'hello there', el: createEl()}); 
 ed1.render();
@@ -93,34 +96,50 @@ ed4.render();
 var ed5 = new ns.InputEditorNumber({value: '3.14', el: createEl()}); 
 ed5.render();
 
-//a boolean editor checkbox
+createEl('h3','a boolean editor checkbox</p>');
 var ed6 = new ns.InputEditorBoolean({value: true, el: createEl()}); 
 ed6.render();
 
-//a boolean editor 2-item selection list. 
+createEl('h3','a boolean editor 2-item selection list. ');
 var ed7 = new ns.InputEditorBoolean({value: false, type: 'select', el: createEl()}); 
 ed7.render();
 
 
-//now object editor testig using AbstractObjectEditor. For this we first need to manually register the editors we want to use. 
-ns.registerEditor(ns.InputEditorBoolean);
-ns.registerEditor(ns.InputEditorNumber);
-ns.registerEditor(ns.InputEditor);
-ns.registerEditor(ns.ObjectEditorTable);
 
-//a very simple object editor
-var ed8 = new ns.ObjectEditorTable({value: {prop1: 'hello', prop2: true}, el: createEl()}); 
-ed8.render();
 
-//a select list editor (using table)
+createEl('h3','a select list editor (using select)');
 var ed9 = new ns.SelectListEditor({
 	value: new ns.type.SelectList(['Mozart', 'Beethoven', 'Bach'], ['Bach']), 
 	el: createEl()}); 
 // ed9.additional
 ed9.render();
 
-//another object editor (using list)
-var ed10 = new ns.ObjectEditorList({value: {prop1: 'hello2', prop2: false, color1: new ns.type.Color(12,23,34)}, el: createEl()}); 
+
+createEl('h3','now object editor testig using AbstractObjectEditor. For this we first need to manually register the editors we want to use.');
+
+ns.registerEditor(ns.InputEditorBoolean);
+ns.registerEditor(ns.InputEditorColor);
+ns.registerEditor(ns.InputEditorNumber);
+ns.registerEditor(ns.InputEditor);
+ns.registerEditor(ns.ObjectEditorTable);
+
+createEl('h3','First, a very simple object editor (using table)');
+var ed8 = new ns.ObjectEditorTable({
+	value: {prop1: 'hello', prop2: true, color2: new ns.type.Color(112,123,34)}, 
+	el: createEl()}); 
+ed8.render();
+
+createEl('h3','another object editor (using list). Also in this example we disable the color editor so other Editor will be used for colors (in this case a simple Object Editor). ');
+ns.unregisterEditor(ns.InputEditorColor); 
+var ed10 = new ns.ObjectEditorList({
+	value: {prop1: 'hello2', prop2: false, color1: new ns.type.Color(12,23,34)}, 
+	el: createEl()
+}); 
+
+
+
+
+// getPropertyEditor: function(propertyName, propertyValue)
 ed10.render();
 
 // a color editor. Hey in this case we don't use the DOM but render the editor in a string. Then we manually add the string to the dom. Purpose of this is demonstrate that this is a text based rendering implementation

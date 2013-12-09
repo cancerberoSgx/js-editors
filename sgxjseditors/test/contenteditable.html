@@ -1,0 +1,23 @@
+<html>
+
+<head>
+	<script src="jquery/jquery-2.0.3.min.js"></script>
+</head>
+<body>
+	<button id="printSelect">printSelect</button>
+	<button id="printSelect">indent</button>
+<div id="example-one" contenteditable="true">
+    <p>Everything contained <b>within</b> this div is editable in any browser including old IE. <a href="http://html5doctor.com/the-contenteditable-attribute/">A nice article</a> </p>
+</div>
+
+
+<script>
+
+jQuery('#printSelect').click(function(){
+	var selection = window.getSelection(), allnodes = []; 
+    console.log('selection parent: '+selection.anchorNode.parentNode.outerHTML)
+});
+</script>
+</body>
+
+</html>

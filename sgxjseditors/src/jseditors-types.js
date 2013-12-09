@@ -53,20 +53,50 @@
 	
 	
 	
+
 	/**
 	 * @class type.Color
 	 */
 	ns.util.defineClass(ns.type, "Color", null /*has no parent*/, 
 		function(r, g, b){ //constructor
-			this.red=r; 
-			this.green=g; 
-			this.blue=b; 
+			if(arguments.length==1 && _(arguments[0]).isString()) {
+				//TODO accept hex strings
+				_extends(this, ns.util.hexToRgb(arguments[0]));
+			}
+			else {
+				this.red=r; 
+				this.green=g; 
+				this.blue=b; 
+			}
 		}
-	,	{/*instance fields */		
-			toHex: function(){}//TODO
+	,	{	/* instance fields */
+			toHex: function(){
+				return this.rgbToHex(this.red, this.green, this.blue);
+			}//TODO
 		,	toCSS: function(){}//TODO
 		}
 	);
+	_(ns.util).extend({
+		// 	hexToR:function(h) {return parseInt((cutHex(h)).substring(0,2),16)}
+		// ,	hexToG:function(h) {return parseInt((cutHex(h)).substring(2,4),16)}
+		// ,	hexToB: function(h) {return parseInt((cutHex(h)).substring(4,6),16)}
+		// ,	cutHex: function(h) {return (h.charAt(0)=="#") ? h.substring(1,7):h}
+		componentToHex: function (c) {
+			var hex = c.toString(16);
+			return hex.length == 1 ? "0" + hex : hex;
+		}
+	,	rgbToHex: function (r, g, b) {
+			return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+		}
+	,	hexToRgb: function (hex) {
+    		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+			return result ? {
+				red: parseInt(result[1], 16),
+				green: parseInt(result[2], 16),
+				blue: parseInt(result[3], 16)
+			} : null;
+		}
+	}); 
 	
 	
 	

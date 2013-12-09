@@ -8,11 +8,13 @@
 	 * named-values, optionally supporting 1) property order, 2) property
 	 * grouping, 3) recursiveness (object editors inside object editors).
 	 * 
+	 * <br/>
 	 * This abstract object editor implementation support the concept of 
 	 * prefixTemplate, propertyTemplate and postfixTemplate so it is easy to 
 	 * build different subclases concrete subclasses table, forms, list, for presenting the properties names. 
 	 * Concrete subclasses must provide a prefixTemplate (optional), propertyTemplate (required), postFixTemplate (optional). 
 	 * 
+	 * <br/> 
 	 * @extends HTML5AbstractEditor
 	 * @class AbstractObjectEditor
 	 */
@@ -61,16 +63,18 @@
 		propertyEditors: {},
 		canEdit : function(obj) {
 			return _.isObject(obj);
-		},
+		}
+		,
 		canEditType : function(type) {
 			return type === ns.types.OBJECT.name;
-		},
+		}
+		,
 		/**
 		 * return all the obejct value property names, respecting the order given by property propertyOrder
 		 * @method getPropertyOrder
 		 * @return Array of String
 		 */
-		getPropertyOrder: function(){
+		getPropertyOrder: function () {
 			var order = this.propertyOrder || [];
 			for(var i in this.value) {
 				if(!_.contains(order, i)) {
@@ -78,8 +82,14 @@
 				}
 			}
 			return order;
-		},
+		}
+		,
 		/**
+		 * method getPropertyEditor(propertyName,propertyValue) is used for getting a property's editor. 
+		 * User may override it for custom chose logic.  <br/>
+		 * The current implementationfollow the rules: <br/>
+		 * 1) editor instances will be chosen by the property's value using ns.getEditorsForValue(propertyValue)<br/>
+		 * 2) undefined and null properties will be ignored<br/>
 		 * @method getPropertyEditor
 		 * @param propertyName {String}
 		 * @param propertyValue {String}
@@ -87,25 +97,34 @@
 		 */
 		getPropertyEditor: function(propertyName, propertyValue) {
 			var editor = null; 
+			//TODO: digg more on function editors
+			if(_.isFunction(propertyValue)) { //current implementation
+				propertyValue = propertyValue.apply(this, arguments); 
+			}
 			if(!this.propertyEditors[propertyName]) {
-				var config = ( this.properties && this.properties[propertyName] ) ? this.properties[propertyName] : {};				
-				if(config.editorName) {
-					editor = ns.newEditor(config.editorName, config);
-				}
-				if(!editor) {
-					var edForVal = ns.getEditorsForValue(propertyValue);
-					if(edForVal && edForVal.length>0){
-						var edName = edForVal[0]; //chose the first match
-						editor = ns.newEditor(edName, config);
-					}
-				}
-				this.propertyEditors[propertyName] = editor; 
+				this.installPropertyEditor(propertyName, propertyValue); 
 			}
 			editor = this.propertyEditors[propertyName]; 
 			//TODO: if (! editor)
 			editor.value=propertyValue;
 			return editor;  
-		},
+		}
+		,
+		installPropertyEditor: function(propertyName, propertyValue) {
+			var config = ( this.properties && this.properties[propertyName] ) ? this.properties[propertyName] : {};				
+			if(config.editorName) {
+				editor = ns.newEditor(config.editorName, config);
+			}
+			if(!editor) {
+				var edForVal = ns.getEditorsForValue(propertyValue);
+				if(edForVal && edForVal.length>0){
+					var edName = edForVal[0]; //chose the first match
+					editor = ns.newEditor(edName, config);
+				}
+			}
+			this.propertyEditors[propertyName] = editor; 
+		}
+		,
 		/**
 		 * @method getPropertyContext
 		 * @param propertyName {String}
@@ -119,7 +138,11 @@
 			context.propertyValue=propertyValue;
 			context.propertyEditor = this.getPropertyEditor(propertyName, propertyValue); 
 			return context; 
-		},
+		}
+		,
+		/**
+		 * 
+		 */
 		render : function() {
 			var sb = [];
 			var context = this.getDefaultTemplateContext();
@@ -127,7 +150,7 @@
 				sb.push(this.prefixTemplate(context)); 
 			}
 			var propertyOrder = this.getPropertyOrder(); 
-			for ( var i = 0; i < propertyOrder.length; i++) {
+			for(var i = 0; i < propertyOrder.length; i++) {
 				var propertyName = propertyOrder[i]; 
 				var propertyValue = this.value[propertyName]; 
 				var propertyContext = this.getPropertyContext(propertyName, propertyValue); 
@@ -138,8 +161,9 @@
 			}
 			var html = sb.join(''); 
 			return this.renderHTML(html); 
-		},
-		flush : function() {
+		}
+		,
+		flush : function () {
 			if (this.readonly) {
 				return this.value;
 			} else {

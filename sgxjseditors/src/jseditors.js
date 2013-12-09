@@ -63,11 +63,19 @@ ns.editors = {};
 ns.registerEditor = function(editorConstructor) {
 	var editorName = editorConstructor.prototype.name;
 	if(!editorName) {
-		ns.util.logerror('ns.registerEditor - missing editorConstructor.prototype.name: editorName'+editorName);
+		ns.util.logerror('ns.registerEditor - missing Editor\'s name property: editorName'+editorName);
 	}
 	ns.editors[editorName]=editorConstructor;
+};
+ns.unregisterEditor = function(editorConstructor) {
+	var editorName = editorConstructor.prototype.name;
+	if(!editorName) {
+		ns.util.logerror('ns.registerEditor - missing Editor\'s name property: editorName'+editorName);
+	}
+	delete ns.editors[editorName]; 
 }; 
 /**
+ * return a new Editor instance for the given name using ns.editors dict.
  * @method newEditor
  * @param editorName
  * @param editorConfig
